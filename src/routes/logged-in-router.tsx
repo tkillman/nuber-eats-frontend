@@ -1,16 +1,6 @@
 import { isLoggedInVar } from "../apollo";
+import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
 
 export const LoggedInRouter = () => {
-  return (
-    <div>
-      <div>LoggedInRouter</div>
-      <button
-        onClick={() => {
-          isLoggedInVar(false);
-        }}
-      >
-        log out
-      </button>
-    </div>
-  );
+  return <div>asfd</div>;
 };
