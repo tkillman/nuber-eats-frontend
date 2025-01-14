@@ -544,7 +544,3 @@ video {
 [hidden]:where(:not([hidden="until-found"])) {
   display: none;
 }
-
-.p-10 {
-  padding: 2.5rem;
-}

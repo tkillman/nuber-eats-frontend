@@ -1,3 +1,16 @@
+import { isLoggedInVar } from "../apollo";
+
 export const LoggedInRouter = () => {
-  return <span>LoggedInRouter</span>;
+  return (
+    <div>
+      <div>LoggedInRouter</div>
+      <button
+        onClick={() => {
+          isLoggedInVar(false);
+        }}
+      >
+        log out
+      </button>
+    </div>
+  );
 };
