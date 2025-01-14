@@ -3,6 +3,7 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
+    "@apollo/client": "^3.12.5",
     "@testing-library/jest-dom": "^5.14.1",
     "@testing-library/react": "^13.0.0",
     "@testing-library/user-event": "^13.2.1",
@@ -11,6 +12,7 @@
     "@types/react": "^18.0.0",
     "@types/react-dom": "^18.0.0",
     "autoprefixer": "^10.4.20",
+    "graphql": "^16.10.0",
     "postcss": "^8.4.49",
     "react": "^19.0.0",
     "react-dom": "^19.0.0",
@@ -20,7 +22,7 @@
     "web-vitals": "^2.1.0"
   },
   "scripts": {
-    "tailwind:build" : "tailwindcss build src/styles/tailwind.css -o src/styles/styles.css",
+    "tailwind:build": "tailwindcss build src/styles/tailwind.css -o src/styles/styles.css",
     "start": "yarn run tailwind:build & react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test",
