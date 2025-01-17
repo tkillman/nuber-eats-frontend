@@ -1,4 +1,5 @@
 import { useForm } from "react-hook-form";
+import FormError from "../components/FormError";
 
 interface IForm {
   email?: string;
@@ -31,20 +32,16 @@ const Login = () => {
                 required: "Email is required",
               })}
             ></input>
-            {errors.email?.message && (
-              <span className="text-red-600">{errors.email?.message}</span>
-            )}
+            <FormError errorMessage={errors.email?.message} />
             <input
               type="password"
               placeholder="password"
               className="input"
               {...register("password", {
-                required: "Email is required",
+                required: "Password is required",
               })}
             ></input>
-            {errors.password?.message && (
-              <span className="text-red-600">{errors.password?.message}</span>
-            )}
+            <FormError errorMessage={errors.password?.message} />
             <button className="button">로그인</button>
           </div>
         </form>
