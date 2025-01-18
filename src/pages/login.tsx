@@ -5,6 +5,8 @@ import {
   LoginMutationMutation,
   LoginMutationMutationVariables,
 } from "../__generated__/graphql";
+import FormButton from "../components/FormButton";
+import { Link } from "react-router-dom";
 
 const LOGIN_MUTATION = gql`
   mutation loginMutation($loginInput: LoginInput!) {
@@ -25,7 +27,7 @@ const Login = () => {
   const {
     register,
     getValues,
-    formState: { errors },
+    formState: { errors, isValid },
     handleSubmit,
   } = useForm<IForm>();
 
@@ -84,10 +86,20 @@ const Login = () => {
               })}
             ></input>
             <FormError errorMessage={errors.password?.message} />
-            <button className="button">{loading ? "로딩중" : "로그인"}</button>
+            <FormButton
+              isValid={isValid}
+              loading={loading}
+              text="로그인"
+            ></FormButton>
             <FormError errorMessage={data?.login.error} />
           </div>
         </form>
+        <div>
+          New to Nuber?{" "}
+          <Link to="/create-account" className="text-lime-600 hover:underline">
+            Create an Account
+          </Link>
+        </div>
       </div>
     </div>
   );
