@@ -10,25 +10,16 @@ import {
 import { MeQuery } from "../__generated__/graphql";
 import Restaurants from "../pages/client/Restaurants";
 import Header from "../components/Header";
-
-const ME_QUERY = gql`
-  query me {
-    me {
-      id
-      email
-      role
-    }
-  }
-`;
+import { useMe } from "../hooks/useMe";
 
 const ClientRouter = [
-  <Route path="/" exact>
+  <Route key={"1"} path="/" exact>
     <Restaurants />
   </Route>,
 ];
 
 export const LoggedInRouter = () => {
-  const { data, loading, error } = useQuery<MeQuery>(ME_QUERY);
+  const { data, loading, error } = useMe();
 
   if (!data || loading || error) {
     return <div>loading</div>;
