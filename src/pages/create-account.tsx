@@ -1,5 +1,102 @@
+import { gql, useMutation } from "@apollo/client";
+import { Helmet } from "react-helmet";
+import { useForm } from "react-hook-form";
+import FormError from "../components/FormError";
+import FormButton from "../components/FormButton";
+import { Link } from "react-router-dom";
+import { UserRole } from "../__generated__/graphql";
+
+const CREATE_USER_MUTATION = gql`
+  mutation createUser($createUserInput: CreateUserInput!) {
+    createUser(input: $createUserInput) {
+      ok
+      error
+    }
+  }
+`;
+
+interface IForm {
+  email?: string;
+  password?: string;
+  role: UserRole;
+}
+
 const CreateAccount = () => {
-  return <div>createAccount</div>;
+  const {
+    register,
+    getValues,
+    formState: { errors, isValid },
+    handleSubmit,
+  } = useForm<IForm>({
+    defaultValues: {
+      role: UserRole.Client,
+    },
+  });
+
+  const [createUserMutation, { data, loading }] = useMutation(
+    CREATE_USER_MUTATION,
+    {
+      onCompleted: (data) => {},
+    }
+  );
+
+  const onSubmit = () => {
+    if (loading) {
+      return;
+    }
+
+    const { email = "", password = "" } = getValues();
+  };
+
+  return (
+    <div className="bg-slate-500 h-screen flex items-center justify-center">
+      <Helmet>
+        <title>CreateAccount | Nuber Eats</title>
+      </Helmet>
+      <div className="flex flex-col bg-white w-full max-w-screen-sm px-5 py-7 rounded-md shadow-md">
+        <p>Create Account</p>
+        <form onSubmit={handleSubmit(onSubmit)}>
+          <div className="flex flex-col gap-3">
+            <input
+              type="email"
+              placeholder="email"
+              className="input"
+              {...register("email", {
+                required: "Email is required",
+              })}
+            ></input>
+            <FormError errorMessage={errors.email?.message} />
+            <input
+              type="password"
+              placeholder="password"
+              className="input"
+              {...register("password", {
+                required: "Password is required",
+              })}
+            ></input>
+            <FormError errorMessage={errors.password?.message} />
+            <select className="input" {...register("role")}>
+              {Object.keys(UserRole).map((role) => (
+                <option key={role}>{role}</option>
+              ))}
+            </select>
+            <FormButton
+              isValid={isValid}
+              loading={loading}
+              text="유저생성"
+            ></FormButton>
+            <FormError errorMessage={data?.login.error} />
+          </div>
+        </form>
+        <div>
+          계정이 있으신가요?{" "}
+          <Link to="/" className="text-lime-600 hover:underline">
+            Log in
+          </Link>
+        </div>
+      </div>
+    </div>
+  );
 };
 
 export default CreateAccount;

@@ -7,6 +7,7 @@ import {
 } from "../__generated__/graphql";
 import FormButton from "../components/FormButton";
 import { Link } from "react-router-dom";
+import { Helmet } from "react-helmet";
 
 const LOGIN_MUTATION = gql`
   mutation loginMutation($loginInput: LoginInput!) {
@@ -64,6 +65,9 @@ const Login = () => {
 
   return (
     <div className="bg-slate-500 h-screen flex items-center justify-center">
+      <Helmet>
+        <title>Login | Nuber Eats</title>
+      </Helmet>
       <div className="flex flex-col bg-white w-full max-w-screen-sm px-5 py-7 rounded-md shadow-md">
         <p>Login</p>
         <form onSubmit={handleSubmit(onSubmit)}>
