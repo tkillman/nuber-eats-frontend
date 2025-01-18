@@ -7,8 +7,9 @@ import {
 } from "../__generated__/graphql";
 import FormButton from "../components/FormButton";
 import { Link } from "react-router-dom";
-import { Helmet } from "react-helmet";
-import { isLoggedInVar } from "../apollo";
+import { Helmet } from "react-helmet-async";
+import { authTokenVar, isLoggedInVar } from "../apollo";
+import { LOCAL_STORAGE_TOKEN } from "../constant/constant";
 
 const LOGIN_MUTATION = gql`
   mutation loginMutation($loginInput: LoginInput!) {
@@ -42,8 +43,9 @@ const Login = () => {
         login: { ok, error, token },
       } = data;
       if (ok) {
-        console.log(token);
-        isLoggedInVar(true);
+        localStorage.setItem(LOCAL_STORAGE_TOKEN, token || "");
+        authTokenVar(token);
+        isLoggedInVar(Boolean(token));
       }
     },
   });
