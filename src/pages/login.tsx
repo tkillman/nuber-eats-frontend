@@ -2,13 +2,13 @@ import { useForm } from "react-hook-form";
 import FormError from "../components/FormError";
 import { gql, useMutation } from "@apollo/client";
 import {
-  LoginMutation,
-  LoginMutationVariables,
+  LoginMutationMutation,
+  LoginMutationMutationVariables,
 } from "../__generated__/graphql";
 
 const LOGIN_MUTATION = gql`
-  mutation login($email: String!, $password: String!) {
-    login(input: { email: $email, password: $password }) {
+  mutation loginMutation($loginInput: LoginInput!) {
+    login(input: $loginInput) {
       ok
       token
       error
@@ -29,16 +29,29 @@ const Login = () => {
     handleSubmit,
   } = useForm<IForm>();
 
-  const [loginMutation] = useMutation<LoginMutation, LoginMutationVariables>(
-    LOGIN_MUTATION
-  );
+  const [loginMutation, { data }] = useMutation<
+    LoginMutationMutation,
+    LoginMutationMutationVariables
+  >(LOGIN_MUTATION, {
+    onCompleted: (data) => {
+      const {
+        login: { ok, error, token },
+      } = data;
+      if (ok) {
+        console.log(token);
+      }
+    },
+  });
 
   const onSubmit = () => {
-    console.log(getValues());
+    const { email = "", password = "" } = getValues();
+
     loginMutation({
       variables: {
-        email: "asdf",
-        password: "asdf",
+        loginInput: {
+          email: email,
+          password: password,
+        },
       },
     });
   };
@@ -68,6 +81,7 @@ const Login = () => {
             ></input>
             <FormError errorMessage={errors.password?.message} />
             <button className="button">로그인</button>
+            <FormError errorMessage={data?.login.error} />
           </div>
         </form>
       </div>

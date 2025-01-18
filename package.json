@@ -25,11 +25,11 @@
   },
   "scripts": {
     "tailwind:build": "tailwindcss build src/styles/tailwind.css -o src/styles/styles.css",
-    "start": "yarn run tailwind:build & react-scripts start",
+    "generate": "graphql-codegen",
+    "start": "yarn run generate & yarn run tailwind:build & react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test",
-    "eject": "react-scripts eject",
-    "generate": "graphql-codegen"
+    "eject": "react-scripts eject"
   },
   "eslintConfig": {
     "extends": [

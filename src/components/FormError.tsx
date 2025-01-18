@@ -1,7 +1,7 @@
 import { FC } from "react";
 
 interface IProps {
-  errorMessage?: string;
+  errorMessage?: string | null;
 }
 const FormError: FC<IProps> = ({ errorMessage }) => {
   if (!errorMessage) {
