@@ -4,11 +4,11 @@ import { gql, useQuery, useReactiveVar } from "@apollo/client";
 import { LoggedInRouter } from "./routes/logged-in-router";
 import { isLoggedInVar } from "./apollo";
 
-const IS_LOGGED_IN = gql`
-  query isLoggedIn {
-    isLoggedIn @client
-  }
-`;
+// const IS_LOGGED_IN = gql`
+//   query isLoggedIn {
+//     isLoggedIn @client
+//   }
+// `;
 
 function App() {
   // const {
