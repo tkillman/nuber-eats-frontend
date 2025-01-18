@@ -29,7 +29,7 @@ const Login = () => {
     handleSubmit,
   } = useForm<IForm>();
 
-  const [loginMutation, { data }] = useMutation<
+  const [loginMutation, { data, loading }] = useMutation<
     LoginMutationMutation,
     LoginMutationMutationVariables
   >(LOGIN_MUTATION, {
@@ -44,6 +44,10 @@ const Login = () => {
   });
 
   const onSubmit = () => {
+    if (loading) {
+      return;
+    }
+
     const { email = "", password = "" } = getValues();
 
     loginMutation({
@@ -80,7 +84,7 @@ const Login = () => {
               })}
             ></input>
             <FormError errorMessage={errors.password?.message} />
-            <button className="button">로그인</button>
+            <button className="button">{loading ? "로딩중" : "로그인"}</button>
             <FormError errorMessage={data?.login.error} />
           </div>
         </form>
