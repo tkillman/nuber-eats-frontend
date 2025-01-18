@@ -11,3 +11,5 @@ https://tailwindcss.com/docs/installation/using-postcss
 yarn add -D @graphql-codegen/typescript-operations @graphql-codegen/typescript
 
 https://www.graphql-code-generator.com/docs/guides/react
+
+https://www.apollographql.com/docs/react/networking/authentication
