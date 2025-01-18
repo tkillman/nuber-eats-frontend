@@ -3,7 +3,7 @@ import { Helmet } from "react-helmet";
 import { useForm } from "react-hook-form";
 import FormError from "../components/FormError";
 import FormButton from "../components/FormButton";
-import { Link } from "react-router-dom";
+import { Link, useHistory } from "react-router-dom";
 import { UserRole } from "../__generated__/graphql";
 
 const CREATE_USER_MUTATION = gql`
@@ -31,12 +31,23 @@ const CreateAccount = () => {
     defaultValues: {
       role: UserRole.Client,
     },
+    mode: "onBlur",
   });
+
+  const history = useHistory();
 
   const [createUserMutation, { data, loading }] = useMutation(
     CREATE_USER_MUTATION,
     {
-      onCompleted: (data) => {},
+      onCompleted: (data) => {
+        const {
+          createUser: { ok, error },
+        } = data;
+        if (ok) {
+          console.log("User created");
+          history.push("/");
+        }
+      },
     }
   );
 
@@ -45,7 +56,16 @@ const CreateAccount = () => {
       return;
     }
 
-    const { email = "", password = "" } = getValues();
+    const { email = "", password = "", role } = getValues();
+    createUserMutation({
+      variables: {
+        createUserInput: {
+          email,
+          password,
+          role: role,
+        },
+      },
+    });
   };
 
   return (
@@ -63,9 +83,13 @@ const CreateAccount = () => {
               className="input"
               {...register("email", {
                 required: "Email is required",
+                pattern: /^[^\s@]+@[^\s@]+\.[^\s@]+$/,
               })}
             ></input>
             <FormError errorMessage={errors.email?.message} />
+            {errors.email?.type === "pattern" && (
+              <FormError errorMessage={"이메일 패턴이 안 맞음"} />
+            )}
             <input
               type="password"
               placeholder="password"
@@ -75,6 +99,7 @@ const CreateAccount = () => {
               })}
             ></input>
             <FormError errorMessage={errors.password?.message} />
+
             <select className="input" {...register("role")}>
               {Object.keys(UserRole).map((role) => (
                 <option key={role}>{role}</option>

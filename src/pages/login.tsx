@@ -8,6 +8,7 @@ import {
 import FormButton from "../components/FormButton";
 import { Link } from "react-router-dom";
 import { Helmet } from "react-helmet";
+import { isLoggedInVar } from "../apollo";
 
 const LOGIN_MUTATION = gql`
   mutation loginMutation($loginInput: LoginInput!) {
@@ -42,6 +43,7 @@ const Login = () => {
       } = data;
       if (ok) {
         console.log(token);
+        isLoggedInVar(true);
       }
     },
   });
