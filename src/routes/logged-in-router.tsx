@@ -11,10 +11,14 @@ import { MeQuery } from "../__generated__/graphql";
 import Restaurants from "../pages/client/Restaurants";
 import Header from "../components/Header";
 import { useMe } from "../hooks/useMe";
+import MyProfile from "../pages/client/MyProfile";
 
 const ClientRouter = [
   <Route key={"1"} path="/" exact>
     <Restaurants />
+  </Route>,
+  <Route key={"2"} path="/my-profile" exact>
+    <MyProfile />
   </Route>,
 ];
 
@@ -29,6 +33,7 @@ export const LoggedInRouter = () => {
     <BrowserRouter>
       <Header />
       <Switch>{data.me.role === "Client" && ClientRouter}</Switch>
+
       <Redirect to="/" />
     </BrowserRouter>
   );
