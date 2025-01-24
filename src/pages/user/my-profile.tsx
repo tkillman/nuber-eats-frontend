@@ -2,12 +2,14 @@ import { Helmet } from "react-helmet-async";
 import { useForm } from "react-hook-form";
 import FormError from "../../components/FormError";
 import FormButton from "../../components/FormButton";
-import { gql, useMutation } from "@apollo/client";
+import { gql, useApolloClient, useMutation } from "@apollo/client";
 import {
   EditProfileMutation,
   EditProfileMutationVariables,
 } from "../../__generated__/graphql";
 import { useMe } from "../../hooks/useMe";
+import { useHistory } from "react-router-dom";
+import { RouterPath } from "../../routes/routerPath";
 
 const EDIT_USER_MUTATION = gql`
   mutation editProfile($input: EditProfileInput!) {
@@ -24,7 +26,9 @@ interface IForm {
 }
 
 const MyProfile = () => {
-  const { data: meData } = useMe();
+  const { data: meData, refetch } = useMe();
+  const client = useApolloClient();
+  const history = useHistory();
 
   const {
     register,
@@ -42,13 +46,32 @@ const MyProfile = () => {
     EditProfileMutation,
     EditProfileMutationVariables
   >(EDIT_USER_MUTATION, {
-    onCompleted: (data) => {
+    onCompleted: async (data) => {
       console.log("editUser onCompleted");
       const {
         editProfile: { ok },
       } = data;
       if (ok) {
         alert("프로필이 수정되었습니다.");
+        // const prevEmail = meData?.me.email;
+        // const newEmail = getValues("email");
+        // if (prevEmail !== newEmail) {
+        //   console.log("캐시와 이메일이 다름");
+        //   client.writeFragment({
+        //     id: `User:${meData?.me.id}`,
+        //     fragment: gql`
+        //       fragment EditedUser on User {
+        //         email
+        //       }
+        //     `,
+        //     data: {
+        //       email: newEmail,
+        //     },
+        //   });
+        // }
+
+        await refetch();
+        history.push(RouterPath.HOME);
       }
     },
   });
@@ -64,7 +87,7 @@ const MyProfile = () => {
       variables: {
         input: {
           email,
-          password,
+          ...(password !== "" && { password }),
         },
       },
     });
