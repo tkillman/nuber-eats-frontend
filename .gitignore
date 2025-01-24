@@ -11,6 +11,9 @@
 # production
 /build
 
+# apollo
+/__generated__
+
 # misc
 .DS_Store
 .env.local
