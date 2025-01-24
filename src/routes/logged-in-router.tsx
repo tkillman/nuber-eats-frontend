@@ -11,7 +11,7 @@ import { MeQuery, UserRole } from "../__generated__/graphql";
 import Restaurants from "../pages/client/Restaurants";
 import Header from "../components/Header";
 import { useMe } from "../hooks/useMe";
-import MyProfile from "../pages/client/MyProfile";
+import MyProfile from "../pages/user/my-profile";
 import ConfirmEmail from "../pages/user/confirm-email";
 import { RouterPath } from "./routerPath";
 

@@ -1,19 +1,17 @@
-import { gql, useMutation } from "@apollo/client";
 import { Helmet } from "react-helmet-async";
 import { useForm } from "react-hook-form";
-import FormError from "../components/FormError";
-import FormButton from "../components/FormButton";
-import { Link, useHistory } from "react-router-dom";
+import FormError from "../../components/FormError";
+import FormButton from "../../components/FormButton";
+import { gql, useMutation } from "@apollo/client";
 import {
-  CreateUserMutation,
-  CreateUserMutationVariables,
-  UserRole,
-} from "../__generated__/graphql";
-import { RouterPath } from "../routes/routerPath";
+  EditProfileMutation,
+  EditProfileMutationVariables,
+} from "../../__generated__/graphql";
+import { useMe } from "../../hooks/useMe";
 
-const CREATE_USER_MUTATION = gql`
-  mutation createUser($input: CreateUserInput!) {
-    createUser(input: $input) {
+const EDIT_USER_MUTATION = gql`
+  mutation editProfile($input: EditProfileInput!) {
+    editProfile(input: $input) {
       ok
       error
     }
@@ -23,35 +21,34 @@ const CREATE_USER_MUTATION = gql`
 interface IForm {
   email?: string;
   password?: string;
-  role: UserRole;
 }
 
-const CreateAccount = () => {
+const MyProfile = () => {
+  const { data: meData } = useMe();
+
   const {
     register,
     getValues,
     formState: { errors, isValid },
     handleSubmit,
   } = useForm<IForm>({
-    defaultValues: {
-      role: UserRole.Client,
-    },
     mode: "onBlur",
+    defaultValues: {
+      email: meData?.me.email,
+    },
   });
 
-  const history = useHistory();
-
-  const [createUserMutation, { data, loading }] = useMutation<
-    CreateUserMutation,
-    CreateUserMutationVariables
-  >(CREATE_USER_MUTATION, {
+  const [editUser, { data, loading }] = useMutation<
+    EditProfileMutation,
+    EditProfileMutationVariables
+  >(EDIT_USER_MUTATION, {
     onCompleted: (data) => {
+      console.log("editUser onCompleted");
       const {
-        createUser: { ok, error },
+        editProfile: { ok },
       } = data;
       if (ok) {
-        console.log("User created");
-        history.push(RouterPath.HOME);
+        alert("프로필이 수정되었습니다.");
       }
     },
   });
@@ -61,13 +58,13 @@ const CreateAccount = () => {
       return;
     }
 
-    const { email = "", password = "", role } = getValues();
-    createUserMutation({
+    const { email = "", password = "" } = getValues();
+
+    editUser({
       variables: {
         input: {
           email,
           password,
-          role: role,
         },
       },
     });
@@ -76,10 +73,10 @@ const CreateAccount = () => {
   return (
     <div className="bg-slate-500 h-screen flex items-center justify-center">
       <Helmet>
-        <title>CreateAccount | Nuber Eats</title>
+        <title>my-profile | Nuber Eats</title>
       </Helmet>
       <div className="flex flex-col bg-white w-full max-w-screen-sm px-5 py-7 rounded-md shadow-md">
-        <p>Create Account</p>
+        <p>My Profile</p>
         <form onSubmit={handleSubmit(onSubmit)}>
           <div className="flex flex-col gap-3">
             <input
@@ -105,27 +102,17 @@ const CreateAccount = () => {
             ></input>
             <FormError errorMessage={errors.password?.message} />
 
-            <select className="input" {...register("role")}>
-              {Object.keys(UserRole).map((role) => (
-                <option key={role}>{role}</option>
-              ))}
-            </select>
             <FormButton
               isValid={isValid}
               loading={loading}
-              text="유저생성"
+              text="프로필수정"
             ></FormButton>
+            <FormError errorMessage={data?.editProfile.error} />
           </div>
         </form>
-        <div>
-          계정이 있으신가요?{" "}
-          <Link to="/" className="text-lime-600 hover:underline">
-            Log in
-          </Link>
-        </div>
       </div>
     </div>
   );
 };
 
-export default CreateAccount;
+export default MyProfile;
