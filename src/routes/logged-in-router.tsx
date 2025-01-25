@@ -16,7 +16,7 @@ import ConfirmEmail from "../pages/user/confirm-email";
 import { RouterPath } from "./routerPath";
 
 const ClientRouter = [
-  <Route key={"1"} path="/" exact>
+  <Route key={"1"} path={RouterPath.HOME} exact>
     <Restaurants />
   </Route>,
   <Route key={"2"} path="/my-profile" exact>
