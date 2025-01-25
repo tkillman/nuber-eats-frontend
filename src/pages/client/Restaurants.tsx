@@ -65,17 +65,36 @@ const Restaurants = () => {
           <div className="flex justify-around max-w-xl mx-auto">
             {data?.allCategories?.categories?.map((category) => {
               return (
-                <div className="flex flex-col items-center hover:bg-green-400 cursor-pointer">
-                  <div
-                    className="w-14 h-14 bg-cover rounded-full "
-                    style={{ backgroundImage: `url(${category.coverImage})` }}
-                  ></div>
+                <div
+                  key={category.id}
+                  className="flex flex-col items-center group cursor-pointer"
+                >
+                  <div className="w-16 h-16 rounded-full group-hover:bg-green-400 flex items-center justify-center">
+                    <div
+                      className="w-14 h-14 bg-cover rounded-full"
+                      style={{ backgroundImage: `url(${category.coverImage})` }}
+                    ></div>
+                  </div>
                   <span className="mt-1 text-sm text-center font-medium">
                     {category.name}
                   </span>
                 </div>
               );
             })}
+          </div>
+          <div className="grid grid-cols-3 gap-x-5 gap-y-10 mt-10">
+            {data?.allRestaurants?.results?.map((restaurant) => (
+              <div key={restaurant.id} className="">
+                <div
+                  className="bg-red-600 py-20 mb-3 bg-cover bg-center"
+                  style={{
+                    backgroundImage: `url(${restaurant.coverImage})`,
+                  }}
+                ></div>
+                <h3 className="text-xl font-medium">{restaurant.name}</h3>
+                <span>{restaurant.category?.name}</span>
+              </div>
+            ))}
           </div>
         </div>
       )}
