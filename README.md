@@ -20,5 +20,10 @@ https://fontawesome.com/v5/search?ic=brands
 
 # 테스트계정
 
+client
 test1@gmail.com
+111111
+
+owner
+timekillman@gmail.com
 111111
