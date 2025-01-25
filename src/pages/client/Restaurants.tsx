@@ -3,6 +3,8 @@ import {
   RestaurantsQueryQuery,
   RestaurantsQueryQueryVariables,
 } from "../../__generated__/graphql";
+import Restaurant from "../../components/Restaurant";
+import { useState } from "react";
 
 const RESTAURANTS_QUERY = gql`
   query restaurantsQuery($input: AllRestaurantInput!) {
@@ -38,18 +40,25 @@ const RESTAURANTS_QUERY = gql`
 `;
 
 const Restaurants = () => {
+  const [page, setPage] = useState(1);
+
   const { data, loading } = useQuery<
     RestaurantsQueryQuery,
     RestaurantsQueryQueryVariables
   >(RESTAURANTS_QUERY, {
     variables: {
       input: {
-        page: 1,
+        page: page,
+        pageSize: 3,
       },
     },
   });
 
   console.log(data);
+
+  const movePage = (index: 1 | -1) => {
+    setPage((current) => current + index);
+  };
 
   return (
     <div>
@@ -84,17 +93,34 @@ const Restaurants = () => {
           </div>
           <div className="grid grid-cols-3 gap-x-5 gap-y-10 mt-10">
             {data?.allRestaurants?.results?.map((restaurant) => (
-              <div key={restaurant.id} className="">
-                <div
-                  className="bg-red-600 py-20 mb-3 bg-cover bg-center"
-                  style={{
-                    backgroundImage: `url(${restaurant.coverImage})`,
-                  }}
-                ></div>
-                <h3 className="text-xl font-medium">{restaurant.name}</h3>
-                <span>{restaurant.category?.name}</span>
-              </div>
+              <Restaurant key={restaurant.id} restaurant={restaurant} />
             ))}
+          </div>
+          <div className="grid grid-cols-3 justify-center mt-10 items-center max-w-xl mx-auto">
+            {page > 1 ? (
+              <button
+                onClick={() => movePage(-1)}
+                className="focus:outline-none font-medium text-3xl"
+              >
+                &larr;
+              </button>
+            ) : (
+              <div></div>
+            )}
+            <span className="text-center">
+              현재 페이지 {page} / {data?.allRestaurants?.totalPages}
+            </span>
+
+            {page < (data?.allRestaurants?.totalPages ?? 1) ? (
+              <button
+                onClick={() => movePage(1)}
+                className="focus:outline-none font-medium text-3xl"
+              >
+                &rarr;
+              </button>
+            ) : (
+              <div></div>
+            )}
           </div>
         </div>
       )}
