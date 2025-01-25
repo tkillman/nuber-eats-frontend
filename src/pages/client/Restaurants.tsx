@@ -5,6 +5,13 @@ import {
 } from "../../__generated__/graphql";
 import Restaurant from "../../components/Restaurant";
 import { useState } from "react";
+import { useForm } from "react-hook-form";
+import { useHistory } from "react-router-dom";
+import { RouterPath } from "../../routes/routerPath";
+
+interface IForm {
+  searchTerm: string;
+}
 
 const RESTAURANTS_QUERY = gql`
   query restaurantsQuery($input: AllRestaurantInput!) {
@@ -42,6 +49,14 @@ const RESTAURANTS_QUERY = gql`
 const Restaurants = () => {
   const [page, setPage] = useState(1);
 
+  const { formState, register, getValues, handleSubmit } = useForm<IForm>({
+    defaultValues: {
+      searchTerm: "",
+    },
+  });
+
+  const history = useHistory();
+
   const { data, loading } = useQuery<
     RestaurantsQueryQuery,
     RestaurantsQueryQueryVariables
@@ -60,13 +75,27 @@ const Restaurants = () => {
     setPage((current) => current + index);
   };
 
+  const onSubmit = () => {
+    console.log("onSubmit");
+    const { searchTerm } = getValues();
+
+    history.push({
+      pathname: RouterPath.SEARCH,
+      search: `?term=${searchTerm}`,
+    });
+  };
+
   return (
     <div>
-      <form className="bg-gray-800 w-full py-10 flex items-center justify-center">
+      <form
+        onSubmit={handleSubmit(onSubmit)}
+        className="bg-gray-800 w-full py-10 flex items-center justify-center"
+      >
         <input
           type="text"
-          className="input border-0 w-3/12"
+          className="input border-0 w-3/4 md:w-3/12"
           placeholder="레스토랑 검색"
+          {...register("searchTerm", { required: true })}
         ></input>
       </form>
       {!loading && (
@@ -91,7 +120,7 @@ const Restaurants = () => {
               );
             })}
           </div>
-          <div className="grid grid-cols-3 gap-x-5 gap-y-10 mt-10">
+          <div className="grid md:grid-cols-3 gap-x-5 gap-y-10 mt-10">
             {data?.allRestaurants?.results?.map((restaurant) => (
               <Restaurant key={restaurant.id} restaurant={restaurant} />
             ))}

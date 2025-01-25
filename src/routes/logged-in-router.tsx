@@ -14,16 +14,21 @@ import { useMe } from "../hooks/useMe";
 import MyProfile from "../pages/user/my-profile";
 import ConfirmEmail from "../pages/user/confirm-email";
 import { RouterPath } from "./routerPath";
+import NotFound from "../pages/404";
+import Search from "../pages/client/Search";
 
 const ClientRouter = [
-  <Route key={"1"} path={RouterPath.HOME} exact>
+  <Route key={"1"} path={RouterPath.HOME}>
     <Restaurants />
   </Route>,
-  <Route key={"2"} path="/my-profile" exact>
+  <Route key={"2"} path={RouterPath.MY_PROFILE}>
     <MyProfile />
   </Route>,
-  <Route key={"3"} path={RouterPath.CONFIRM_EMAIL} exact>
+  <Route key={"3"} path={RouterPath.CONFIRM_EMAIL}>
     <ConfirmEmail />
+  </Route>,
+  <Route key={"4"} path={RouterPath.SEARCH}>
+    <Search />
   </Route>,
 ];
 
@@ -40,6 +45,9 @@ export const LoggedInRouter = () => {
       <Switch>{data.me.role === UserRole.Client && ClientRouter}</Switch>
 
       {/* <Redirect to="/" /> */}
+      <Route>
+        <NotFound />
+      </Route>
     </BrowserRouter>
   );
 };

@@ -5,4 +5,5 @@ export const enum RouterPath {
   RESTAURANTS = "/restaurants",
   MY_PROFILE = "/my-profile",
   CONFIRM_EMAIL = "/confirm-email",
+  SEARCH = "/search",
 }
