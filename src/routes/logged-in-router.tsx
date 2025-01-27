@@ -17,6 +17,7 @@ import { RouterPath } from "./routerPath";
 import NotFound from "../pages/404";
 import Search from "../pages/client/Search";
 import Category from "../pages/client/Category";
+import RestaurantsDetail from "../pages/client/RestaurantsDetail";
 
 const ClientRouter = [
   <Route key={RouterPath.HOME} path={RouterPath.HOME} exact>
@@ -33,6 +34,12 @@ const ClientRouter = [
   </Route>,
   <Route key={RouterPath.CATEGORY} path={`${RouterPath.CATEGORY}/:slug`}>
     <Category />
+  </Route>,
+  <Route
+    key={RouterPath.RESTAURANT_DETAIL}
+    path={`${RouterPath.RESTAURANT_DETAIL}/:id`}
+  >
+    <RestaurantsDetail />
   </Route>,
   <Route key={"999"}>
     <NotFound />
