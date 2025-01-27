@@ -24,7 +24,7 @@ describe("<App/>", () => {
   it("랜더링 LoggedInRouter 테스트", async () => {
     const { debug } = render(<App />);
 
-    debug();
+    // (debug as any)();
 
     await waitFor(() => {
       isLoggedInVar(true);

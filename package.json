@@ -36,7 +36,7 @@
     "generate": "rimraf src/__generated__ && graphql-codegen",
     "start": "yarn run generate & yarn run tailwind:build & react-scripts start",
     "build": "react-scripts build",
-    "test": "react-scripts test",
+    "test": "react-scripts test --verbose",
     "eject": "react-scripts eject",
     "test:cover": "yarn test --coverage --watchAll=false"
   },
