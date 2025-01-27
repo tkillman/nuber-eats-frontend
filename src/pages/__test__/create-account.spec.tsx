@@ -84,7 +84,13 @@ describe("CreateAccount", () => {
 
     await waitFor(() => {
       expect(mockResponse).toHaveBeenCalledTimes(1);
-      expect(mockResponse).toHaveBeenCalledWith({});
+      expect(mockResponse).toHaveBeenCalledWith({
+        input: {
+          email: formData.email,
+          password: formData.password,
+          role: formData.role,
+        },
+      });
     });
   });
 });
