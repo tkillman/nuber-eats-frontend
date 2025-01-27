@@ -8,6 +8,21 @@ import { RenderResult, waitFor, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { UserRole } from "../../__generated__/graphql";
 
+// mock 할려는 함수는 반드시 mock으로 시작해야 함, 안 그러면 에러남
+const mockPush = jest.fn();
+
+jest.mock("react-router-dom", () => {
+  const realModule = jest.requireActual("react-router-dom");
+  return {
+    ...realModule,
+    useHistory: () => {
+      return {
+        push: mockPush,
+      };
+    },
+  };
+});
+
 describe("CreateAccount", () => {
   let mockClient: MockApolloClient;
   let view: RenderResult;
@@ -91,6 +106,12 @@ describe("CreateAccount", () => {
           role: formData.role,
         },
       });
+
+      expect(mockPush).toHaveBeenCalledWith("/");
     });
+  });
+
+  afterAll(() => {
+    jest.clearAllMocks();
   });
 });
