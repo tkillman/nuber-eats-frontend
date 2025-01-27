@@ -1,8 +1,8 @@
 import React from "react";
-import { LoggedOutRouter } from "./routes/logged-out-router";
+import { LoggedOutRouter } from "../routes/logged-out-router";
 import { gql, useQuery, useReactiveVar } from "@apollo/client";
-import { LoggedInRouter } from "./routes/logged-in-router";
-import { isLoggedInVar } from "./apollo";
+import { LoggedInRouter } from "../routes/logged-in-router";
+import { isLoggedInVar } from "../apollo";
 
 // const IS_LOGGED_IN = gql`
 //   query isLoggedIn {
@@ -10,7 +10,7 @@ import { isLoggedInVar } from "./apollo";
 //   }
 // `;
 
-function App() {
+const App = () => {
   // const {
   //   data: { isLoggedIn },
   // } = useQuery(IS_LOGGED_IN);
@@ -20,6 +20,6 @@ function App() {
   const isLoggedIn = useReactiveVar(isLoggedInVar);
 
   return isLoggedIn ? <LoggedInRouter /> : <LoggedOutRouter />;
-}
+};
 
 export default App;
