@@ -16,19 +16,26 @@ import ConfirmEmail from "../pages/user/confirm-email";
 import { RouterPath } from "./routerPath";
 import NotFound from "../pages/404";
 import Search from "../pages/client/Search";
+import Category from "../pages/client/Category";
 
 const ClientRouter = [
-  <Route key={"1"} path={RouterPath.HOME}>
+  <Route key={RouterPath.HOME} path={RouterPath.HOME} exact>
     <Restaurants />
   </Route>,
-  <Route key={"2"} path={RouterPath.MY_PROFILE}>
+  <Route key={RouterPath.MY_PROFILE} path={RouterPath.MY_PROFILE} exact>
     <MyProfile />
   </Route>,
-  <Route key={"3"} path={RouterPath.CONFIRM_EMAIL}>
+  <Route key={RouterPath.CONFIRM_EMAIL} path={RouterPath.CONFIRM_EMAIL} exact>
     <ConfirmEmail />
   </Route>,
-  <Route key={"4"} path={RouterPath.SEARCH}>
+  <Route key={RouterPath.SEARCH} path={RouterPath.SEARCH} exact>
     <Search />
+  </Route>,
+  <Route key={RouterPath.CATEGORY} path={`${RouterPath.CATEGORY}/:slug`}>
+    <Category />
+  </Route>,
+  <Route key={"999"}>
+    <NotFound />
   </Route>,
 ];
 
@@ -43,11 +50,10 @@ export const LoggedInRouter = () => {
     <BrowserRouter>
       <Header />
       <Switch>{data.me.role === UserRole.Client && ClientRouter}</Switch>
-
       {/* <Redirect to="/" /> */}
-      <Route>
+      {/* <Route key={"999"}>
         <NotFound />
-      </Route>
+      </Route> */}
     </BrowserRouter>
   );
 };

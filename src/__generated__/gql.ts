@@ -14,8 +14,12 @@ import { TypedDocumentNode as DocumentNode } from '@graphql-typed-document-node/
  * Learn more about it here: https://the-guild.dev/graphql/codegen/plugins/presets/preset-client#reducing-bundle-size
  */
 const documents = {
+    "\n  fragment RestaurantParts on Restaurant {\n    id\n    name\n    coverImage\n    category {\n      name\n    }\n    address\n    isPromoted\n  }\n": types.RestaurantPartsFragmentDoc,
+    "\n  fragment CategoryParts on Category {\n    id\n    name\n    coverImage\n    slug\n    restaurantCount\n  }\n": types.CategoryPartsFragmentDoc,
     "\n  query me {\n    me {\n      id\n      email\n      role\n      verified\n    }\n  }\n": types.MeDocument,
-    "\n  query restaurantsQuery($input: AllRestaurantInput!) {\n    allCategories {\n      ok\n      error\n      categories {\n        id\n        name\n        coverImage\n        slug\n        restaurantCount\n      }\n    }\n\n    allRestaurants(input: $input) {\n      ok\n      error\n      totalPages\n      totalResults\n      results {\n        id\n        name\n        coverImage\n        category {\n          name\n        }\n        address\n        isPromoted\n      }\n    }\n  }\n": types.RestaurantsQueryDocument,
+    "\n  query findCategory($input: FindCategoryInput!) {\n    findCategory(input: $input) {\n      ok\n      error\n      totalPages\n      totalResults\n      category {\n        ...CategoryParts\n        restaurants {\n          ...RestaurantParts\n        }\n      }\n    }\n  }\n\n  \n  \n": types.FindCategoryDocument,
+    "\n  query restaurantsQuery($input: AllRestaurantInput!) {\n    allCategories {\n      ok\n      error\n      categories {\n        ...CategoryParts\n      }\n    }\n\n    allRestaurants(input: $input) {\n      ok\n      error\n      totalPages\n      totalResults\n      results {\n        ...RestaurantParts\n      }\n    }\n  }\n  \n  \n": types.RestaurantsQueryDocument,
+    "\n  query searchRestaurantsQuery($input: SearchRestaurantInput!) {\n    searchRestaurants(input: $input) {\n      ok\n      error\n      totalPages\n      totalResults\n      restaurants {\n        ...RestaurantParts\n      }\n    }\n  }\n  \n": types.SearchRestaurantsQueryDocument,
     "\n  mutation createUser($input: CreateUserInput!) {\n    createUser(input: $input) {\n      ok\n      error\n    }\n  }\n": types.CreateUserDocument,
     "\n  mutation loginMutation($loginInput: LoginInput!) {\n    login(input: $loginInput) {\n      ok\n      token\n      error\n    }\n  }\n": types.LoginMutationDocument,
     "\n  mutation verifyEmail($input: VerifyEmailInput!) {\n    verifyEmail(input: $input) {\n      ok\n      error\n    }\n  }\n": types.VerifyEmailDocument,
@@ -40,11 +44,27 @@ export function gql(source: string): unknown;
 /**
  * The gql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */
+export function gql(source: "\n  fragment RestaurantParts on Restaurant {\n    id\n    name\n    coverImage\n    category {\n      name\n    }\n    address\n    isPromoted\n  }\n"): (typeof documents)["\n  fragment RestaurantParts on Restaurant {\n    id\n    name\n    coverImage\n    category {\n      name\n    }\n    address\n    isPromoted\n  }\n"];
+/**
+ * The gql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
+ */
+export function gql(source: "\n  fragment CategoryParts on Category {\n    id\n    name\n    coverImage\n    slug\n    restaurantCount\n  }\n"): (typeof documents)["\n  fragment CategoryParts on Category {\n    id\n    name\n    coverImage\n    slug\n    restaurantCount\n  }\n"];
+/**
+ * The gql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
+ */
 export function gql(source: "\n  query me {\n    me {\n      id\n      email\n      role\n      verified\n    }\n  }\n"): (typeof documents)["\n  query me {\n    me {\n      id\n      email\n      role\n      verified\n    }\n  }\n"];
 /**
  * The gql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */
-export function gql(source: "\n  query restaurantsQuery($input: AllRestaurantInput!) {\n    allCategories {\n      ok\n      error\n      categories {\n        id\n        name\n        coverImage\n        slug\n        restaurantCount\n      }\n    }\n\n    allRestaurants(input: $input) {\n      ok\n      error\n      totalPages\n      totalResults\n      results {\n        id\n        name\n        coverImage\n        category {\n          name\n        }\n        address\n        isPromoted\n      }\n    }\n  }\n"): (typeof documents)["\n  query restaurantsQuery($input: AllRestaurantInput!) {\n    allCategories {\n      ok\n      error\n      categories {\n        id\n        name\n        coverImage\n        slug\n        restaurantCount\n      }\n    }\n\n    allRestaurants(input: $input) {\n      ok\n      error\n      totalPages\n      totalResults\n      results {\n        id\n        name\n        coverImage\n        category {\n          name\n        }\n        address\n        isPromoted\n      }\n    }\n  }\n"];
+export function gql(source: "\n  query findCategory($input: FindCategoryInput!) {\n    findCategory(input: $input) {\n      ok\n      error\n      totalPages\n      totalResults\n      category {\n        ...CategoryParts\n        restaurants {\n          ...RestaurantParts\n        }\n      }\n    }\n  }\n\n  \n  \n"): (typeof documents)["\n  query findCategory($input: FindCategoryInput!) {\n    findCategory(input: $input) {\n      ok\n      error\n      totalPages\n      totalResults\n      category {\n        ...CategoryParts\n        restaurants {\n          ...RestaurantParts\n        }\n      }\n    }\n  }\n\n  \n  \n"];
+/**
+ * The gql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
+ */
+export function gql(source: "\n  query restaurantsQuery($input: AllRestaurantInput!) {\n    allCategories {\n      ok\n      error\n      categories {\n        ...CategoryParts\n      }\n    }\n\n    allRestaurants(input: $input) {\n      ok\n      error\n      totalPages\n      totalResults\n      results {\n        ...RestaurantParts\n      }\n    }\n  }\n  \n  \n"): (typeof documents)["\n  query restaurantsQuery($input: AllRestaurantInput!) {\n    allCategories {\n      ok\n      error\n      categories {\n        ...CategoryParts\n      }\n    }\n\n    allRestaurants(input: $input) {\n      ok\n      error\n      totalPages\n      totalResults\n      results {\n        ...RestaurantParts\n      }\n    }\n  }\n  \n  \n"];
+/**
+ * The gql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
+ */
+export function gql(source: "\n  query searchRestaurantsQuery($input: SearchRestaurantInput!) {\n    searchRestaurants(input: $input) {\n      ok\n      error\n      totalPages\n      totalResults\n      restaurants {\n        ...RestaurantParts\n      }\n    }\n  }\n  \n"): (typeof documents)["\n  query searchRestaurantsQuery($input: SearchRestaurantInput!) {\n    searchRestaurants(input: $input) {\n      ok\n      error\n      totalPages\n      totalResults\n      restaurants {\n        ...RestaurantParts\n      }\n    }\n  }\n  \n"];
 /**
  * The gql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */

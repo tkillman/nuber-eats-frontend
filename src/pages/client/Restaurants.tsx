@@ -1,13 +1,16 @@
 import { gql, useQuery } from "@apollo/client";
 import {
+  CategoryPartsFragment,
+  RestaurantPartsFragment,
   RestaurantsQueryQuery,
   RestaurantsQueryQueryVariables,
 } from "../../__generated__/graphql";
 import Restaurant from "../../components/Restaurant";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
-import { useHistory } from "react-router-dom";
+import { Link, useHistory } from "react-router-dom";
 import { RouterPath } from "../../routes/routerPath";
+import { CATEGORY_FRAGMENT, RESTAURANT_FRAGMENT } from "../../fragment";
 
 interface IForm {
   searchTerm: string;
@@ -19,11 +22,7 @@ const RESTAURANTS_QUERY = gql`
       ok
       error
       categories {
-        id
-        name
-        coverImage
-        slug
-        restaurantCount
+        ...CategoryParts
       }
     }
 
@@ -33,23 +32,18 @@ const RESTAURANTS_QUERY = gql`
       totalPages
       totalResults
       results {
-        id
-        name
-        coverImage
-        category {
-          name
-        }
-        address
-        isPromoted
+        ...RestaurantParts
       }
     }
   }
+  ${RESTAURANT_FRAGMENT}
+  ${CATEGORY_FRAGMENT}
 `;
 
 const Restaurants = () => {
   const [page, setPage] = useState(1);
 
-  const { formState, register, getValues, handleSubmit } = useForm<IForm>({
+  const { register, getValues, handleSubmit } = useForm<IForm>({
     defaultValues: {
       searchTerm: "",
     },
@@ -69,7 +63,8 @@ const Restaurants = () => {
     },
   });
 
-  console.log(data);
+  const categories = data?.allCategories?.categories;
+  const results = data?.allRestaurants?.results;
 
   const movePage = (index: 1 | -1) => {
     setPage((current) => current + index);
@@ -101,29 +96,47 @@ const Restaurants = () => {
       {!loading && (
         <div className="container mx-auto">
           <div className="flex justify-around max-w-xl mx-auto">
-            {data?.allCategories?.categories?.map((category) => {
+            {categories?.map((category) => {
+              const fixCategory = category as CategoryPartsFragment;
+
               return (
-                <div
-                  key={category.id}
-                  className="flex flex-col items-center group cursor-pointer"
-                >
-                  <div className="w-16 h-16 rounded-full group-hover:bg-green-400 flex items-center justify-center">
-                    <div
-                      className="w-14 h-14 bg-cover rounded-full"
-                      style={{ backgroundImage: `url(${category.coverImage})` }}
-                    ></div>
+                <Link to={`/category/${fixCategory.slug}`} key={fixCategory.id}>
+                  <div
+                    key={fixCategory.id}
+                    className="flex flex-col items-center group cursor-pointer"
+                  >
+                    <div className="w-16 h-16 rounded-full group-hover:bg-green-400 flex items-center justify-center">
+                      <div
+                        className="w-14 h-14 bg-cover rounded-full"
+                        style={{
+                          backgroundImage: `url(${fixCategory.coverImage})`,
+                        }}
+                      ></div>
+                    </div>
+                    <span className="mt-1 text-sm text-center font-medium">
+                      {fixCategory.name}
+                    </span>
                   </div>
-                  <span className="mt-1 text-sm text-center font-medium">
-                    {category.name}
-                  </span>
-                </div>
+                </Link>
               );
             })}
           </div>
           <div className="grid md:grid-cols-3 gap-x-5 gap-y-10 mt-10">
-            {data?.allRestaurants?.results?.map((restaurant) => (
-              <Restaurant key={restaurant.id} restaurant={restaurant} />
-            ))}
+            {results?.map((restaurant, index) => {
+              const fixRestaurant = restaurant as RestaurantPartsFragment;
+
+              return (
+                <Restaurant
+                  key={String(index)}
+                  restaurant={{
+                    id: fixRestaurant.id,
+                    name: fixRestaurant.name,
+                    coverImage: fixRestaurant.coverImage,
+                    category: fixRestaurant.category,
+                  }}
+                />
+              );
+            })}
           </div>
           <div className="grid grid-cols-3 justify-center mt-10 items-center max-w-xl mx-auto">
             {page > 1 ? (

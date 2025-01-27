@@ -11,6 +11,12 @@ const config: CodegenConfig = {
       presetConfig: {
         gqlTagName: "gql",
       },
+      // config: {
+      //   avoidOptionals: true,
+      //   preResolveTypes: true,
+      //   skipTypename: false,
+      //   useTypeImports: true,
+      // },
     },
   },
   ignoreNoDocuments: true,

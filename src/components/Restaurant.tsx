@@ -1,16 +1,11 @@
 import { FC } from "react";
-import { Restaurant, RestaurantsQueryQuery } from "../__generated__/graphql";
+import { RestaurantPartsFragment } from "../__generated__/graphql";
 
 interface RestaurantProps {
-  restaurant?: {
-    __typename?: "Restaurant";
-    id: number;
-    name: string;
-    coverImage: string;
-    address: string;
-    isPromoted: boolean;
-    category?: { __typename?: "Category"; name: string } | null;
-  } | null;
+  restaurant?: Pick<
+    RestaurantPartsFragment,
+    "id" | "coverImage" | "category" | "name"
+  > | null;
 }
 
 const RestaurantComponent: FC<RestaurantProps> = ({ restaurant }) => {
