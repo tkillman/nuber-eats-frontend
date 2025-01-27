@@ -32,7 +32,9 @@ const Login = () => {
     getValues,
     formState: { errors, isValid },
     handleSubmit,
-  } = useForm<IForm>();
+  } = useForm<IForm>({
+    mode: "onChange",
+  });
 
   const [loginMutation, { data, loading }] = useMutation<
     LoginMutationMutation,
@@ -81,9 +83,13 @@ const Login = () => {
               placeholder="email"
               className="input"
               {...register("email", {
-                required: "Email is required",
+                required: "이메일은 필수 입력 사항입니다.",
+                pattern: /^[^\s@]+@[^\s@]+\.[^\s@]+$/,
               })}
             ></input>
+            {errors.email?.type === "pattern" && (
+              <FormError errorMessage={"이메일 패턴이 안 맞음"} />
+            )}
             <FormError errorMessage={errors.email?.message} />
             <input
               type="password"
