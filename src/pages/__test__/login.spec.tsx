@@ -90,6 +90,8 @@ describe("Login", () => {
     });
     mockClient.setRequestHandler(LOGIN_MUTATION, mockResponse);
 
+    jest.spyOn(Storage.prototype, "setItem");
+
     await waitFor(() => {
       expect(mockResponse).toHaveBeenCalledTimes(1);
       expect(mockResponse).toHaveBeenCalledWith({
@@ -97,6 +99,7 @@ describe("Login", () => {
           ...formData,
         },
       });
+      expect(localStorage.setItem).toHaveBeenCalledWith("token", "XX");
     });
   });
 });
