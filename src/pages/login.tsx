@@ -11,7 +11,7 @@ import { Helmet } from "react-helmet-async";
 import { authTokenVar, isLoggedInVar } from "../apollo";
 import { LOCAL_STORAGE_TOKEN } from "../constant/constant";
 
-const LOGIN_MUTATION = gql`
+export const LOGIN_MUTATION = gql`
   mutation loginMutation($loginInput: LoginInput!) {
     login(input: $loginInput) {
       ok
@@ -96,7 +96,7 @@ const Login = () => {
               placeholder="password"
               className="input"
               {...register("password", {
-                required: "Password is required",
+                required: "비밀번호는 필수 입력 사항입니다.",
               })}
             ></input>
             <FormError errorMessage={errors.password?.message} />

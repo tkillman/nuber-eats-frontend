@@ -9,6 +9,7 @@ interface FormButtonProps {
 const FormButton: FC<FormButtonProps> = (props) => {
   return (
     <button
+      role="button"
       className={`button ${
         props.isValid
           ? "bg-blue-500 hover:bg-blue-700"
