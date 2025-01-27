@@ -11,7 +11,7 @@ import {
 } from "../__generated__/graphql";
 import { RouterPath } from "../routes/routerPath";
 
-const CREATE_USER_MUTATION = gql`
+export const CREATE_USER_MUTATION = gql`
   mutation createUser($input: CreateUserInput!) {
     createUser(input: $input) {
       ok
@@ -36,7 +36,7 @@ const CreateAccount = () => {
     defaultValues: {
       role: UserRole.Client,
     },
-    mode: "onBlur",
+    mode: "onChange",
   });
 
   const history = useHistory();
