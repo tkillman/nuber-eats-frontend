@@ -6,6 +6,7 @@ import Logo from "./logo";
 
 const Header = () => {
   const { data } = useMe();
+  console.log("🚀 ~ Header ~ data:", data);
 
   return (
     <>
