@@ -7,7 +7,11 @@ const FormError: FC<IProps> = ({ errorMessage }) => {
   if (!errorMessage) {
     return null;
   }
-  return <span className="text-red-600">{errorMessage}</span>;
+  return (
+    <span role="alert" className="text-red-600">
+      {errorMessage}
+    </span>
+  );
 };
 
 export default FormError;
