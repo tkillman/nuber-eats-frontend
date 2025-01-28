@@ -42,6 +42,6 @@ describe("회원가입 페이지", () => {
 
     cy.wait(1000);
 
-    cy.login({ email: emailValue, password: passwordValue });
+    cy.clientLogin({ email: emailValue, password: passwordValue });
   });
 });

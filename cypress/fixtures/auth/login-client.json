@@ -1,0 +1,10 @@
+{
+  "data": {
+    "login": {
+      "ok": true,
+      "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6NiwiaWF0IjoxNzM4MDQ0NDMyfQ.uddkP8mAE7DLC_JuwZ59O97aPMnUZQKkM1fmW1Xcqgk",
+      "error": null,
+      "__typename": "LoginOutput"
+    }
+  }
+}

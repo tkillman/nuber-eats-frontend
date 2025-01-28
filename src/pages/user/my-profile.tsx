@@ -36,7 +36,7 @@ const MyProfile = () => {
     formState: { errors, isValid },
     handleSubmit,
   } = useForm<IForm>({
-    mode: "onBlur",
+    mode: "onChange",
     defaultValues: {
       email: meData?.me.email,
     },

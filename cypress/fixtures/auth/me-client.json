@@ -1,0 +1,11 @@
+{
+  "data": {
+    "me": {
+      "id": 6,
+      "email": "test1@gmail.com",
+      "role": "Client",
+      "verified": false,
+      "__typename": "User"
+    }
+  }
+}
