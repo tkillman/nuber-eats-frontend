@@ -21,7 +21,7 @@ describe("회원가입 페이지", () => {
   });
 
   it("정상 회원가입 테스트", () => {
-    const emailValue = "test4@gmail.com";
+    const emailValue = "test@gmail.com";
     const passwordValue = "111111";
 
     cy.intercept("POST", "http://localhost:4000/graphql", (req) => {
@@ -42,11 +42,6 @@ describe("회원가입 페이지", () => {
 
     cy.wait(1000);
 
-    // 여기서는 로그인 페이지로 이동했음
-    cy.location("pathname").should("eq", "/");
-    cy.get('input[name="email"]').type(emailValue);
-    cy.get('input[name="password"]').type(passwordValue);
-    cy.get("button").should("not.have.class", "pointer-events-none").click();
-    cy.window().its("localStorage.token").should("be.a", "string");
+    cy.login({ email: emailValue, password: passwordValue });
   });
 });
