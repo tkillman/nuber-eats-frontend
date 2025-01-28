@@ -11,8 +11,15 @@ import Search from "../pages/client/Search";
 import Category from "../pages/client/Category";
 import RestaurantsDetail from "../pages/client/RestaurantsDetail";
 import MyRestaurants from "../pages/owner/MyRestaurants";
+import AddRestaurant from "../pages/owner/AddRestaurant";
 
-const clientRouters = [
+type IRouter = {
+  path: string;
+  component: JSX.Element;
+  exact?: boolean;
+};
+
+const clientRouters: IRouter[] = [
   {
     path: RouterPath.HOME,
     component: <Restaurants />,
@@ -35,15 +42,20 @@ const clientRouters = [
   },
 ];
 
-const ownerRouters = [
+const ownerRouters: IRouter[] = [
   {
     path: RouterPath.HOME,
     component: <MyRestaurants />,
     exact: true,
   },
+  {
+    path: RouterPath.ADD_RESTAURANT,
+    component: <AddRestaurant />,
+    exact: true,
+  },
 ];
 
-const commonRouters = [
+const commonRouters: IRouter[] = [
   {
     path: RouterPath.CONFIRM_EMAIL,
     component: <ConfirmEmail />,

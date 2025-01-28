@@ -8,4 +8,5 @@ export const enum RouterPath {
   SEARCH = "/search",
   CATEGORY = "/category",
   RESTAURANT_DETAIL = "/restaurant",
+  ADD_RESTAURANT = "/add-restaurant",
 }

@@ -51,13 +51,6 @@ export type Category = {
   updatedAt: Scalars['DateTime']['output'];
 };
 
-export type CategoryInputType = {
-  coverImage?: InputMaybe<Scalars['String']['input']>;
-  name: Scalars['String']['input'];
-  restaurants: Array<RestaurantInputType>;
-  slug: Scalars['String']['input'];
-};
-
 export type CreateDishInput = {
   description: Scalars['String']['input'];
   name: Scalars['String']['input'];
@@ -104,11 +97,7 @@ export type CreateRestaurantInputType = {
   address: Scalars['String']['input'];
   categoryName: Scalars['String']['input'];
   coverImage: Scalars['String']['input'];
-  isPromoted: Scalars['Boolean']['input'];
-  menu?: InputMaybe<Array<DishInputType>>;
   name: Scalars['String']['input'];
-  orders?: InputMaybe<Array<OrderInputType>>;
-  promotedUntil?: InputMaybe<Scalars['DateTime']['input']>;
 };
 
 export type CreateRestaurantOutput = {
@@ -168,14 +157,6 @@ export type DishChoiceInputType = {
   name: Scalars['String']['input'];
 };
 
-export type DishInputType = {
-  description: Scalars['String']['input'];
-  name: Scalars['String']['input'];
-  options?: InputMaybe<Array<DishOptionInputType>>;
-  photo: Scalars['String']['input'];
-  price: Scalars['Float']['input'];
-};
-
 export type DishOption = {
   __typename?: 'DishOption';
   choices?: Maybe<Array<DishChoice>>;
@@ -231,11 +212,7 @@ export type EditRestaurantInput = {
   address?: InputMaybe<Scalars['String']['input']>;
   categoryName?: InputMaybe<Scalars['String']['input']>;
   coverImage?: InputMaybe<Scalars['String']['input']>;
-  isPromoted?: InputMaybe<Scalars['Boolean']['input']>;
-  menu?: InputMaybe<Array<DishInputType>>;
   name?: InputMaybe<Scalars['String']['input']>;
-  orders?: InputMaybe<Array<OrderInputType>>;
-  promotedUntil?: InputMaybe<Scalars['DateTime']['input']>;
   restaurantId: Scalars['Float']['input'];
 };
 
@@ -404,15 +381,6 @@ export type Order = {
   updatedAt: Scalars['DateTime']['output'];
 };
 
-export type OrderInputType = {
-  customer?: InputMaybe<UserInputType>;
-  driver?: InputMaybe<UserInputType>;
-  items: Array<OrderItemInputType>;
-  restaurant?: InputMaybe<RestaurantInputType>;
-  status: OrderStatus;
-  total: Scalars['Float']['input'];
-};
-
 export type OrderItem = {
   __typename?: 'OrderItem';
   createdAt: Scalars['DateTime']['output'];
@@ -420,11 +388,6 @@ export type OrderItem = {
   id: Scalars['Float']['output'];
   options?: Maybe<Array<OrderItemOption>>;
   updatedAt: Scalars['DateTime']['output'];
-};
-
-export type OrderItemInputType = {
-  dish: DishInputType;
-  options?: InputMaybe<Array<OrderItemOptionInputType>>;
 };
 
 export type OrderItemOption = {
@@ -459,13 +422,6 @@ export type Payment = {
   transactionId: Scalars['String']['output'];
   updatedAt: Scalars['DateTime']['output'];
   user: User;
-};
-
-export type PaymentInputType = {
-  restaurant: RestaurantInputType;
-  restaurantId: Scalars['Float']['input'];
-  transactionId: Scalars['String']['input'];
-  user: UserInputType;
 };
 
 export type Query = {
@@ -533,18 +489,6 @@ export type RestaurantInput = {
   restaurantId: Scalars['Float']['input'];
 };
 
-export type RestaurantInputType = {
-  address: Scalars['String']['input'];
-  category?: InputMaybe<CategoryInputType>;
-  coverImage: Scalars['String']['input'];
-  isPromoted: Scalars['Boolean']['input'];
-  menu?: InputMaybe<Array<DishInputType>>;
-  name: Scalars['String']['input'];
-  orders?: InputMaybe<Array<OrderInputType>>;
-  promotedUntil?: InputMaybe<Scalars['DateTime']['input']>;
-  user: UserInputType;
-};
-
 export type RestaurantOutput = {
   __typename?: 'RestaurantOutput';
   error?: Maybe<Scalars['String']['output']>;
@@ -602,17 +546,6 @@ export type User = {
   role: UserRole;
   updatedAt: Scalars['DateTime']['output'];
   verified: Scalars['Boolean']['output'];
-};
-
-export type UserInputType = {
-  email: Scalars['String']['input'];
-  orders: Array<OrderInputType>;
-  password: Scalars['String']['input'];
-  payments: Array<PaymentInputType>;
-  restaurants: Array<RestaurantInputType>;
-  rides: Array<OrderInputType>;
-  role: UserRole;
-  verified: Scalars['Boolean']['input'];
 };
 
 export type UserProfileOutput = {
@@ -707,6 +640,21 @@ export type LoginMutationMutationVariables = Exact<{
 
 export type LoginMutationMutation = { __typename?: 'Mutation', login: { __typename?: 'LoginOutput', ok: boolean, token?: string | null, error?: string | null } };
 
+export type CreateRestaurantMutationVariables = Exact<{
+  input: CreateRestaurantInputType;
+}>;
+
+
+export type CreateRestaurantMutation = { __typename?: 'Mutation', createRestaurant: { __typename?: 'CreateRestaurantOutput', ok: boolean, error?: string | null } };
+
+export type MyRestaurantsQueryVariables = Exact<{ [key: string]: never; }>;
+
+
+export type MyRestaurantsQuery = { __typename?: 'Query', myRestaurants: { __typename?: 'MyRestaurantsOutput', ok: boolean, error?: string | null, restaurants?: Array<(
+      { __typename?: 'Restaurant' }
+      & { ' $fragmentRefs'?: { 'RestaurantPartsFragment': RestaurantPartsFragment } }
+    )> | null } };
+
 export type VerifyEmailMutationVariables = Exact<{
   input: VerifyEmailInput;
 }>;
@@ -733,5 +681,7 @@ export const RestaurantQueryDocument = {"kind":"Document","definitions":[{"kind"
 export const SearchRestaurantsQueryDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"searchRestaurantsQuery"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"input"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"SearchRestaurantInput"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"searchRestaurants"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"input"},"value":{"kind":"Variable","name":{"kind":"Name","value":"input"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"ok"}},{"kind":"Field","name":{"kind":"Name","value":"error"}},{"kind":"Field","name":{"kind":"Name","value":"totalPages"}},{"kind":"Field","name":{"kind":"Name","value":"totalResults"}},{"kind":"Field","name":{"kind":"Name","value":"restaurants"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"FragmentSpread","name":{"kind":"Name","value":"RestaurantParts"}}]}}]}}]}},{"kind":"FragmentDefinition","name":{"kind":"Name","value":"RestaurantParts"},"typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"Restaurant"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"name"}},{"kind":"Field","name":{"kind":"Name","value":"coverImage"}},{"kind":"Field","name":{"kind":"Name","value":"category"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"name"}}]}},{"kind":"Field","name":{"kind":"Name","value":"address"}},{"kind":"Field","name":{"kind":"Name","value":"isPromoted"}}]}}]} as unknown as DocumentNode<SearchRestaurantsQueryQuery, SearchRestaurantsQueryQueryVariables>;
 export const CreateUserDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"mutation","name":{"kind":"Name","value":"createUser"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"input"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"CreateUserInput"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"createUser"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"input"},"value":{"kind":"Variable","name":{"kind":"Name","value":"input"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"ok"}},{"kind":"Field","name":{"kind":"Name","value":"error"}}]}}]}}]} as unknown as DocumentNode<CreateUserMutation, CreateUserMutationVariables>;
 export const LoginMutationDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"mutation","name":{"kind":"Name","value":"loginMutation"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"loginInput"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"LoginInput"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"login"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"input"},"value":{"kind":"Variable","name":{"kind":"Name","value":"loginInput"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"ok"}},{"kind":"Field","name":{"kind":"Name","value":"token"}},{"kind":"Field","name":{"kind":"Name","value":"error"}}]}}]}}]} as unknown as DocumentNode<LoginMutationMutation, LoginMutationMutationVariables>;
+export const CreateRestaurantDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"mutation","name":{"kind":"Name","value":"createRestaurant"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"input"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"CreateRestaurantInputType"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"createRestaurant"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"input"},"value":{"kind":"Variable","name":{"kind":"Name","value":"input"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"ok"}},{"kind":"Field","name":{"kind":"Name","value":"error"}}]}}]}}]} as unknown as DocumentNode<CreateRestaurantMutation, CreateRestaurantMutationVariables>;
+export const MyRestaurantsDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"myRestaurants"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"myRestaurants"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"ok"}},{"kind":"Field","name":{"kind":"Name","value":"error"}},{"kind":"Field","name":{"kind":"Name","value":"restaurants"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"FragmentSpread","name":{"kind":"Name","value":"RestaurantParts"}}]}}]}}]}},{"kind":"FragmentDefinition","name":{"kind":"Name","value":"RestaurantParts"},"typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"Restaurant"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"name"}},{"kind":"Field","name":{"kind":"Name","value":"coverImage"}},{"kind":"Field","name":{"kind":"Name","value":"category"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"name"}}]}},{"kind":"Field","name":{"kind":"Name","value":"address"}},{"kind":"Field","name":{"kind":"Name","value":"isPromoted"}}]}}]} as unknown as DocumentNode<MyRestaurantsQuery, MyRestaurantsQueryVariables>;
 export const VerifyEmailDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"mutation","name":{"kind":"Name","value":"verifyEmail"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"input"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"VerifyEmailInput"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"verifyEmail"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"input"},"value":{"kind":"Variable","name":{"kind":"Name","value":"input"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"ok"}},{"kind":"Field","name":{"kind":"Name","value":"error"}}]}}]}}]} as unknown as DocumentNode<VerifyEmailMutation, VerifyEmailMutationVariables>;
 export const EditProfileDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"mutation","name":{"kind":"Name","value":"editProfile"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"input"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"EditProfileInput"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"editProfile"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"input"},"value":{"kind":"Variable","name":{"kind":"Name","value":"input"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"ok"}},{"kind":"Field","name":{"kind":"Name","value":"error"}}]}}]}}]} as unknown as DocumentNode<EditProfileMutation, EditProfileMutationVariables>;
