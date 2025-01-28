@@ -384,6 +384,13 @@ export type MutationVerifyEmailArgs = {
   input: VerifyEmailInput;
 };
 
+export type MyRestaurantsOutput = {
+  __typename?: 'MyRestaurantsOutput';
+  error?: Maybe<Scalars['String']['output']>;
+  ok: Scalars['Boolean']['output'];
+  restaurants?: Maybe<Array<Restaurant>>;
+};
+
 export type Order = {
   __typename?: 'Order';
   createdAt: Scalars['DateTime']['output'];
@@ -471,6 +478,7 @@ export type Query = {
   getPayments: GetPaymentOutput;
   hi: Scalars['Boolean']['output'];
   me: User;
+  myRestaurants: MyRestaurantsOutput;
   searchRestaurants: SearchRestaurantOutput;
   userProfile: UserProfileOutput;
 };

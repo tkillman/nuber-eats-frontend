@@ -1,13 +1,5 @@
-import { gql, useQuery } from "@apollo/client";
-import { isLoggedInVar } from "../apollo";
-import {
-  BrowserRouter as Router,
-  Route,
-  Switch,
-  BrowserRouter,
-  Redirect,
-} from "react-router-dom";
-import { MeQuery, UserRole } from "../__generated__/graphql";
+import { BrowserRouter, Route, Switch } from "react-router-dom";
+import { UserRole } from "../__generated__/graphql";
 import Restaurants from "../pages/client/Restaurants";
 import Header from "../components/Header";
 import { useMe } from "../hooks/useMe";
@@ -18,32 +10,50 @@ import NotFound from "../pages/404";
 import Search from "../pages/client/Search";
 import Category from "../pages/client/Category";
 import RestaurantsDetail from "../pages/client/RestaurantsDetail";
+import MyRestaurants from "../pages/owner/MyRestaurants";
 
-const ClientRouter = [
-  <Route key={RouterPath.HOME} path={RouterPath.HOME} exact>
-    <Restaurants />
-  </Route>,
-  <Route key={RouterPath.MY_PROFILE} path={RouterPath.MY_PROFILE} exact>
-    <MyProfile />
-  </Route>,
-  <Route key={RouterPath.CONFIRM_EMAIL} path={RouterPath.CONFIRM_EMAIL} exact>
-    <ConfirmEmail />
-  </Route>,
-  <Route key={RouterPath.SEARCH} path={RouterPath.SEARCH} exact>
-    <Search />
-  </Route>,
-  <Route key={RouterPath.CATEGORY} path={`${RouterPath.CATEGORY}/:slug`}>
-    <Category />
-  </Route>,
-  <Route
-    key={RouterPath.RESTAURANT_DETAIL}
-    path={`${RouterPath.RESTAURANT_DETAIL}/:id`}
-  >
-    <RestaurantsDetail />
-  </Route>,
-  <Route key={"999"}>
-    <NotFound />
-  </Route>,
+const clientRouters = [
+  {
+    path: RouterPath.HOME,
+    component: <Restaurants />,
+    exact: true,
+  },
+  {
+    path: RouterPath.SEARCH,
+    component: <Search />,
+    exact: true,
+  },
+  {
+    path: `${RouterPath.CATEGORY}/:slug`,
+    component: <Category />,
+    exact: true,
+  },
+  {
+    path: `${RouterPath.RESTAURANT_DETAIL}/:id`,
+    component: <RestaurantsDetail />,
+    exact: true,
+  },
+];
+
+const ownerRouters = [
+  {
+    path: RouterPath.HOME,
+    component: <MyRestaurants />,
+    exact: true,
+  },
+];
+
+const commonRouters = [
+  {
+    path: RouterPath.CONFIRM_EMAIL,
+    component: <ConfirmEmail />,
+    exact: true,
+  },
+  {
+    path: RouterPath.MY_PROFILE,
+    component: <MyProfile />,
+    exact: true,
+  },
 ];
 
 export const LoggedInRouter = () => {
@@ -56,11 +66,35 @@ export const LoggedInRouter = () => {
   return (
     <BrowserRouter>
       <Header />
-      <Switch>{data.me.role === UserRole.Client && ClientRouter}</Switch>
+      <Switch>
+        {data.me.role === UserRole.Client &&
+          clientRouters.map((router) => {
+            return (
+              <Route key={router.path} path={router.path} exact={router.exact}>
+                {router.component}
+              </Route>
+            );
+          })}
+        {data.me.role === UserRole.Owner &&
+          ownerRouters.map((router) => {
+            return (
+              <Route key={router.path} path={router.path} exact={router.exact}>
+                {router.component}
+              </Route>
+            );
+          })}
+        {commonRouters.map((router) => {
+          return (
+            <Route key={router.path} path={router.path} exact={router.exact}>
+              {router.component}
+            </Route>
+          );
+        })}
+        <Route key={"999"}>
+          <NotFound />
+        </Route>
+      </Switch>
       {/* <Redirect to="/" /> */}
-      {/* <Route key={"999"}>
-        <NotFound />
-      </Route> */}
     </BrowserRouter>
   );
 };
