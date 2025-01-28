@@ -650,6 +650,10 @@ video {
   margin-top: 1.25rem;
 }
 
+.inline-block {
+  display: inline-block;
+}
+
 .flex {
   display: flex;
 }

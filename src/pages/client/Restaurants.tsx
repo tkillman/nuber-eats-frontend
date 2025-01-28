@@ -5,7 +5,7 @@ import {
   RestaurantsQueryQuery,
   RestaurantsQueryQueryVariables,
 } from "../../__generated__/graphql";
-import Restaurant from "../../components/Restaurant";
+import RestaurantComponent from "../../components/Restaurant";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { Link, useHistory } from "react-router-dom";
@@ -126,7 +126,7 @@ const Restaurants = () => {
               const fixRestaurant = restaurant as RestaurantPartsFragment;
 
               return (
-                <Restaurant
+                <RestaurantComponent
                   key={String(index)}
                   restaurant={{
                     id: fixRestaurant.id,

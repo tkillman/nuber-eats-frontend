@@ -1,10 +1,14 @@
 import { gql, useQuery } from "@apollo/client";
 import { RESTAURANT_FRAGMENT } from "../../fragment";
-import { MyRestaurantsQuery } from "../../__generated__/graphql";
+import {
+  MyRestaurantsQuery,
+  RestaurantPartsFragment,
+} from "../../__generated__/graphql";
 import { Link } from "react-router-dom";
 import { RouterPath } from "../../routes/routerPath";
+import RestaurantComponent from "../../components/Restaurant";
 
-const MY_RESTAURANTS_QUERY = gql`
+export const MY_RESTAURANTS_QUERY = gql`
   query myRestaurants {
     myRestaurants {
       ok
@@ -20,16 +24,41 @@ const MY_RESTAURANTS_QUERY = gql`
 const MyRestaurants = () => {
   const { data } = useQuery<MyRestaurantsQuery>(MY_RESTAURANTS_QUERY);
   console.log("🚀 ~ MyRestaurants ~ data:", data);
+
+  const isExist = data?.myRestaurants.restaurants?.length !== 0;
+  const results = data?.myRestaurants.restaurants;
+
   return (
     <div>
       <div className="container mx-auto">
         <h4 className="mt-14 text-4xl font-bold">MyRestaurants</h4>
-        {data?.myRestaurants.restaurants?.length === 0 && (
+        <Link to={RouterPath.ADD_RESTAURANT}>
+          <h6 className="text-green-400 underline mt-5 inline-block">
+            만드세요 &rarr;
+          </h6>
+        </Link>
+        {!isExist && (
           <div className="flex flex-col gap-10 mt-5">
             <h5>레스토랑이 없습니다.</h5>
-            <Link to={RouterPath.ADD_RESTAURANT}>
-              <h6 className="text-green-400 underline">만드세요 &rarr;</h6>
-            </Link>
+          </div>
+        )}
+        {isExist && (
+          <div className="grid md:grid-cols-3 gap-x-5 gap-y-10 mt-10">
+            {results?.map((restaurant, index) => {
+              const fixRestaurant = restaurant as RestaurantPartsFragment;
+
+              return (
+                <RestaurantComponent
+                  key={String(index)}
+                  restaurant={{
+                    id: fixRestaurant.id,
+                    name: fixRestaurant.name,
+                    coverImage: fixRestaurant.coverImage,
+                    category: fixRestaurant.category,
+                  }}
+                />
+              );
+            })}
           </div>
         )}
       </div>
