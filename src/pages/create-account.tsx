@@ -52,6 +52,8 @@ const CreateAccount = () => {
       if (ok) {
         console.log("User created");
         history.push(RouterPath.HOME);
+      } else {
+        alert(error);
       }
     },
   });
