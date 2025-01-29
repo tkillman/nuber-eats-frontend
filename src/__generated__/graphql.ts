@@ -55,7 +55,7 @@ export type CreateDishInput = {
   description: Scalars['String']['input'];
   name: Scalars['String']['input'];
   options?: InputMaybe<Array<DishOptionInputType>>;
-  photo: Scalars['String']['input'];
+  photo?: InputMaybe<Scalars['String']['input']>;
   price: Scalars['Float']['input'];
   restaurantId: Scalars['Float']['input'];
 };
@@ -142,7 +142,7 @@ export type Dish = {
   id: Scalars['Float']['output'];
   name: Scalars['String']['output'];
   options?: Maybe<Array<DishOption>>;
-  photo: Scalars['String']['output'];
+  photo?: Maybe<Scalars['String']['output']>;
   price: Scalars['Float']['output'];
   updatedAt: Scalars['DateTime']['output'];
 };
@@ -593,7 +593,7 @@ export type RestaurantPartsFragment = { __typename?: 'Restaurant', id: number, n
 
 export type CategoryPartsFragment = { __typename?: 'Category', id: number, name: string, coverImage?: string | null, slug: string, restaurantCount: number } & { ' $fragmentName'?: 'CategoryPartsFragment' };
 
-export type DishPartsFragment = { __typename?: 'Dish', id: number, createdAt: any, updatedAt: any, name: string, price: number, photo: string, description: string, options?: Array<{ __typename?: 'DishOption', name: string, extra?: number | null, choices?: Array<{ __typename?: 'DishChoice', name: string, extra?: number | null }> | null }> | null } & { ' $fragmentName'?: 'DishPartsFragment' };
+export type DishPartsFragment = { __typename?: 'Dish', id: number, createdAt: any, updatedAt: any, name: string, price: number, photo?: string | null, description: string, options?: Array<{ __typename?: 'DishOption', name: string, extra?: number | null, choices?: Array<{ __typename?: 'DishChoice', name: string, extra?: number | null }> | null }> | null } & { ' $fragmentName'?: 'DishPartsFragment' };
 
 export type MeQueryVariables = Exact<{ [key: string]: never; }>;
 
