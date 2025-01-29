@@ -9,7 +9,6 @@ import { isLoggedInVar } from "../apollo";
 
 const Header = () => {
   const { data } = useMe();
-  console.log("🚀 ~ Header ~ data:", data);
 
   return (
     <>
