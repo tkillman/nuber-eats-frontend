@@ -1,15 +1,29 @@
 import { gql, useQuery } from "@apollo/client";
 import { Link, useParams } from "react-router-dom";
-import { DISH_FRAGMENT, RESTAURANT_FRAGMENT } from "../../fragment";
+import {
+  DISH_FRAGMENT,
+  ORDER_FRAGMENT,
+  RESTAURANT_FRAGMENT,
+} from "../../fragment";
 import {
   DishPartsFragment,
   MyRestaurantQuery,
   MyRestaurantQueryVariables,
+  OrderPartsFragment,
   RestaurantPartsFragment,
 } from "../../__generated__/graphql";
 import { RouterPath } from "../../routes/routerPath";
 import Dish from "../../components/Dish";
-import { VictoryAxis, VictoryBar, VictoryChart } from "victory";
+import {
+  VictoryAxis,
+  VictoryBar,
+  VictoryChart,
+  VictoryLabel,
+  VictoryLine,
+  VictoryTheme,
+  VictoryTooltip,
+  VictoryVoronoiContainer,
+} from "victory";
 
 export const MY_RESTAURANT_QUERY = gql`
   query myRestaurant($input: MyRestaurantInput!) {
@@ -21,11 +35,15 @@ export const MY_RESTAURANT_QUERY = gql`
         menu {
           ...DishParts
         }
+        orders {
+          ...OrderParts
+        }
       }
     }
   }
   ${RESTAURANT_FRAGMENT}
   ${DISH_FRAGMENT}
+  ${ORDER_FRAGMENT}
 `;
 
 const chartData = [
@@ -44,7 +62,6 @@ const chartData = [
 
 const MyRestaurant = () => {
   const param = useParams<{ id: string }>();
-  console.log(param.id);
 
   const { data } = useQuery<MyRestaurantQuery, MyRestaurantQueryVariables>(
     MY_RESTAURANT_QUERY,
@@ -58,9 +75,14 @@ const MyRestaurant = () => {
   );
 
   const restaurant = data?.myRestaurant
-    .restaurant as RestaurantPartsFragment & { menu?: DishPartsFragment[] };
+    .restaurant as RestaurantPartsFragment & {
+    menu?: DishPartsFragment[];
+    orders?: OrderPartsFragment[];
+  };
 
   const dishes = restaurant?.menu;
+  const orders = restaurant?.orders;
+  console.log("🚀 ~ MyRestaurant ~ orders:", orders);
 
   return (
     <div>
@@ -83,14 +105,14 @@ const MyRestaurant = () => {
         {dishes && (
           <div className="grid grid-cols-3 gap-4 mt-5">
             {dishes.map((dish) => {
-              return <Dish dish={dish} />;
+              return <Dish key={dish.id} dish={dish} />;
             })}
           </div>
         )}
         <div className="mt-5">
           <h4 className="font-bold text-center">판매 그래프</h4>
           <div className="max-w-lg mx-auto">
-            <VictoryChart domainPadding={20}>
+            {/* <VictoryChart domainPadding={20}>
               <VictoryAxis
                 //label="Amount of Money"
                 dependentAxis
@@ -99,6 +121,45 @@ const MyRestaurant = () => {
               />
               <VictoryAxis label="Days" />
               <VictoryBar data={chartData} />
+            </VictoryChart> */}
+            <VictoryChart
+              height={500}
+              theme={VictoryTheme.material}
+              width={window.innerWidth}
+              domainPadding={50}
+              containerComponent={<VictoryVoronoiContainer />}
+            >
+              <VictoryLine
+                labels={({ datum }) => `$${datum.y}`}
+                labelComponent={
+                  <VictoryTooltip
+                    style={{ fontSize: 18 }}
+                    renderInPortal
+                    dy={-20}
+                  />
+                }
+                data={orders?.map((order) => ({
+                  x: order.createdAt,
+                  y: order.total,
+                }))}
+                interpolation="natural"
+                style={{
+                  data: {
+                    strokeWidth: 5,
+                  },
+                }}
+              />
+              <VictoryAxis
+                tickLabelComponent={<VictoryLabel renderInPortal />}
+                style={{
+                  tickLabels: {
+                    fontSize: 20,
+                  },
+                }}
+                tickFormat={(tick: any) =>
+                  new Date(tick).toLocaleDateString("ko")
+                }
+              />
             </VictoryChart>
           </div>
         </div>
