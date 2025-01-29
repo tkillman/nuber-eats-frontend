@@ -2,11 +2,13 @@ import { gql, useQuery } from "@apollo/client";
 import { Link, useParams } from "react-router-dom";
 import { DISH_FRAGMENT, RESTAURANT_FRAGMENT } from "../../fragment";
 import {
+  DishPartsFragment,
   MyRestaurantQuery,
   MyRestaurantQueryVariables,
   RestaurantPartsFragment,
 } from "../../__generated__/graphql";
 import { RouterPath } from "../../routes/routerPath";
+import Dish from "../../components/Dish";
 
 export const MY_RESTAURANT_QUERY = gql`
   query myRestaurant($input: MyRestaurantInput!) {
@@ -40,8 +42,11 @@ const MyRestaurant = () => {
     }
   );
 
-  const restaurant = data?.myRestaurant.restaurant as RestaurantPartsFragment;
-  console.log(restaurant);
+  const restaurant = data?.myRestaurant
+    .restaurant as RestaurantPartsFragment & { menu?: DishPartsFragment[] };
+
+  const dishes = restaurant?.menu;
+
   return (
     <div>
       <div
@@ -60,6 +65,13 @@ const MyRestaurant = () => {
             <h3 className="button">프로모션 지불하기 &rarr;</h3>
           </Link>
         </div>
+        {dishes && (
+          <div className="grid grid-cols-3 gap-4 mt-5">
+            {dishes.map((dish) => {
+              return <Dish dish={dish} />;
+            })}
+          </div>
+        )}
       </div>
     </div>
   );
