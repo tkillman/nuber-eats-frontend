@@ -13,6 +13,7 @@ import RestaurantsDetail from "../pages/client/RestaurantsDetail";
 import MyRestaurants from "../pages/owner/MyRestaurants";
 import AddRestaurant from "../pages/owner/AddRestaurant";
 import MyRestaurant from "../pages/owner/MyRestaurant";
+import AddDish from "../pages/owner/AddDish";
 
 type IRouter = {
   path: string;
@@ -57,6 +58,11 @@ const ownerRouters: IRouter[] = [
   {
     path: `${RouterPath.RESTAURANT_DETAIL}/:id`,
     component: <MyRestaurant />,
+    exact: true,
+  },
+  {
+    path: `${RouterPath.ADD_DISH}/:restaurantId`,
+    component: <AddDish />,
     exact: true,
   },
 ];
