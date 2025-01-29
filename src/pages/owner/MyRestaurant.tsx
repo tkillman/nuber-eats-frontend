@@ -9,6 +9,7 @@ import {
 } from "../../__generated__/graphql";
 import { RouterPath } from "../../routes/routerPath";
 import Dish from "../../components/Dish";
+import { VictoryAxis, VictoryBar, VictoryChart } from "victory";
 
 export const MY_RESTAURANT_QUERY = gql`
   query myRestaurant($input: MyRestaurantInput!) {
@@ -72,6 +73,27 @@ const MyRestaurant = () => {
             })}
           </div>
         )}
+        <div className="mt-5">
+          <h4 className="font-bold text-center">판매 그래프</h4>
+          <div className="max-w-lg mx-auto">
+            <VictoryChart domainPadding={20}>
+              <VictoryAxis
+                label="Amount of Money"
+                dependentAxis
+                tickValues={[20, 30, 40, 50, 60]}
+              />
+              <VictoryAxis label="Days of Life" />
+              <VictoryBar
+                data={[
+                  { x: 10, y: 10 },
+                  { x: 20, y: 5 },
+                  { x: 30, y: 20 },
+                  { x: 40, y: 25 },
+                ]}
+              />
+            </VictoryChart>
+          </div>
+        </div>
       </div>
     </div>
   );
