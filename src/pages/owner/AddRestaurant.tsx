@@ -9,6 +9,8 @@ import FormError from "../../components/FormError";
 import FormButton from "../../components/FormButton";
 import { useState } from "react";
 import { MY_RESTAURANTS_QUERY } from "./MyRestaurants";
+import { useHistory } from "react-router-dom";
+import { RouterPath } from "../../routes/routerPath";
 
 const CREATE_RESTAURANT_MUTATION = gql`
   mutation createRestaurant($input: CreateRestaurantInputType!) {
@@ -38,6 +40,7 @@ const AddRestaurant = () => {
   const [loading, setLoading] = useState(false);
 
   const client = useApolloClient();
+  const history = useHistory();
 
   const onCompleted = (data: CreateRestaurantMutation) => {
     if (data.createRestaurant.ok) {
@@ -72,6 +75,7 @@ const AddRestaurant = () => {
         },
       });
       setLoading(false);
+      history.push(RouterPath.HOME);
     } else {
       console.log(data.createRestaurant.error);
     }
