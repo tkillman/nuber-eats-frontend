@@ -28,6 +28,20 @@ export const MY_RESTAURANT_QUERY = gql`
   ${DISH_FRAGMENT}
 `;
 
+const chartData = [
+  { x: 1, y: 3000 },
+  { x: 2, y: 1500 },
+  { x: 3, y: 4250 },
+  { x: 4, y: 1250 },
+  { x: 5, y: 2300 },
+  { x: 6, y: 7150 },
+  { x: 7, y: 6830 },
+  { x: 8, y: 6830 },
+  { x: 9, y: 6830 },
+  { x: 10, y: 6830 },
+  { x: 11, y: 6830 },
+];
+
 const MyRestaurant = () => {
   const param = useParams<{ id: string }>();
   console.log(param.id);
@@ -78,19 +92,13 @@ const MyRestaurant = () => {
           <div className="max-w-lg mx-auto">
             <VictoryChart domainPadding={20}>
               <VictoryAxis
-                label="Amount of Money"
+                //label="Amount of Money"
                 dependentAxis
-                tickValues={[20, 30, 40, 50, 60]}
+                tickFormat={(tick) => `${tick}원`}
+                //tickValues={[20, 30, 40, 50, 60]}
               />
-              <VictoryAxis label="Days of Life" />
-              <VictoryBar
-                data={[
-                  { x: 10, y: 10 },
-                  { x: 20, y: 5 },
-                  { x: 30, y: 20 },
-                  { x: 40, y: 25 },
-                ]}
-              />
+              <VictoryAxis label="Days" />
+              <VictoryBar data={chartData} />
             </VictoryChart>
           </div>
         </div>
