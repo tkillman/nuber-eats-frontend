@@ -38,7 +38,6 @@ export const DISH_FRAGMENT = gql`
         name
         extra
       }
-      extra
     }
   }
 `;

@@ -75,7 +75,7 @@ const EditDish: FC<IEditDish> = ({ dish, moveBack }) => {
 
             choiceInputs[optionId].push(choiceId);
             setValue(`${OPTION_NAME_PREFIX}${optionId}`, option.name);
-            setValue(`${OPTION_EXTRA_PREFIX}${optionId}`, option.extra);
+            //setValue(`${OPTION_EXTRA_PREFIX}${optionId}`, option.extra);
             const choiceName = option.choices[j].name;
             const choiceExtra = option.choices[j].extra;
 
@@ -120,7 +120,7 @@ const EditDish: FC<IEditDish> = ({ dish, moveBack }) => {
     console.log(rest);
 
     const options = Object.keys(choiceInputs).map((id) => {
-      const extra = rest[`${OPTION_EXTRA_PREFIX}${id}`];
+      //const extra = rest[`${OPTION_EXTRA_PREFIX}${id}`];
 
       const choices = choiceInputs[`${id}`]?.map((choiceId) => {
         const choiceExtra = rest[`${CHOICE_EXTRA_PREFIX}${choiceId}`];
@@ -132,10 +132,21 @@ const EditDish: FC<IEditDish> = ({ dish, moveBack }) => {
 
       return {
         name: rest[`${OPTION_NAME_PREFIX}${id}`],
-        extra: extra ? +extra : 0,
+        //extra: extra ? +extra : 0,
         choices,
       };
     });
+
+    // options에 중복된 name 있는지 확인
+    const optionNames = options.map((option) => option.name);
+    const isDuplicated = optionNames.some(
+      (name, index) => optionNames.indexOf(name) !== index
+    );
+
+    if (isDuplicated) {
+      console.log("중복된 옵션명이 있습니다.");
+      return;
+    }
 
     try {
       let photo;
@@ -255,7 +266,7 @@ const EditDish: FC<IEditDish> = ({ dish, moveBack }) => {
                     className="input"
                     {...register(`${OPTION_NAME_PREFIX}${optionId}`)}
                   ></input>
-                  <input
+                  {/* <input
                     type="number"
                     min={0}
                     placeholder="옵션 가격"
@@ -263,7 +274,7 @@ const EditDish: FC<IEditDish> = ({ dish, moveBack }) => {
                     {...register(`${OPTION_EXTRA_PREFIX}${optionId}`, {
                       valueAsNumber: true,
                     })}
-                  ></input>
+                  ></input> */}
                   <button
                     type="button"
                     className="button"

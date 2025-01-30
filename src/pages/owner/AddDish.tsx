@@ -84,7 +84,7 @@ const AddDish = () => {
     console.log(rest);
 
     const options = Object.keys(choiceInputs).map((id) => {
-      const extra = rest[`${OPTION_EXTRA_PREFIX}${id}`];
+      //const extra = rest[`${OPTION_EXTRA_PREFIX}${id}`];
 
       const choices = choiceInputs[`${id}`]?.map((choiceId) => {
         const choiceExtra = rest[`${CHOICE_EXTRA_PREFIX}${choiceId}`];
@@ -96,10 +96,21 @@ const AddDish = () => {
 
       return {
         name: rest[`${OPTION_NAME_PREFIX}${id}`],
-        extra: extra ? +extra : 0,
+        //extra: extra ? +extra : 0,
         choices,
       };
     });
+
+    // options에 중복된 name 있는지 확인
+    const optionNames = options.map((option) => option.name);
+    const isDuplicated = optionNames.some(
+      (name, index) => optionNames.indexOf(name) !== index
+    );
+
+    if (isDuplicated) {
+      console.log("중복된 옵션명이 있습니다.");
+      return;
+    }
 
     try {
       let photo;
@@ -148,6 +159,7 @@ const AddDish = () => {
               className="input"
               {...register("price", {
                 required: "메뉴 가격은 필수입니다.",
+                valueAsNumber: true,
               })}
             ></input>
             <FormError errorMessage={errors.price?.message} />
@@ -186,7 +198,7 @@ const AddDish = () => {
                     className="input"
                     {...register(`${OPTION_NAME_PREFIX}${optionId}`)}
                   ></input>
-                  <input
+                  {/* <input
                     type="number"
                     min={0}
                     placeholder="옵션 가격"
@@ -194,7 +206,7 @@ const AddDish = () => {
                     {...register(`${OPTION_EXTRA_PREFIX}${optionId}`, {
                       valueAsNumber: true,
                     })}
-                  ></input>
+                  ></input> */}
                   <button
                     type="button"
                     className="button"
