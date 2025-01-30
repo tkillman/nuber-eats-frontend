@@ -24,6 +24,8 @@ import {
   VictoryTooltip,
   VictoryVoronoiContainer,
 } from "victory";
+import { useState } from "react";
+import EditDish from "./editDish";
 
 export const MY_RESTAURANT_QUERY = gql`
   query myRestaurant($input: MyRestaurantInput!) {
@@ -63,6 +65,7 @@ const chartData = [
 const MyRestaurant = () => {
   const param = useParams<{ id: string }>();
 
+  const [editDish, setEditDish] = useState<DishPartsFragment | null>(null);
   const { data } = useQuery<MyRestaurantQuery, MyRestaurantQueryVariables>(
     MY_RESTAURANT_QUERY,
     {
@@ -82,7 +85,10 @@ const MyRestaurant = () => {
 
   const dishes = restaurant?.menu;
   const orders = restaurant?.orders;
-  console.log("🚀 ~ MyRestaurant ~ orders:", orders);
+
+  const moveBack = () => {
+    setEditDish(null);
+  };
 
   return (
     <div>
@@ -90,29 +96,37 @@ const MyRestaurant = () => {
         className="bg-cover bg-center min-h-28 mt-2"
         style={{ backgroundImage: `url(${restaurant?.coverImage})` }}
       ></div>
-      <div className="container">
-        <h4 className="mt-2">My Restaurant</h4>
-        <div className="flex gap-2 mt-2">
-          <Link to={`${RouterPath.ADD_DISH}/${param.id}`}>
-            <h3 className="button bg-slate-600 hover:bg-slate-700">
-              메뉴 추가 &rarr;
-            </h3>
-          </Link>
-          <Link to={"/asdfkj"}>
+      {!editDish && (
+        <div className="container">
+          <h4 className="mt-2">My Restaurant</h4>
+          <div className="flex gap-2 mt-2">
+            <Link to={`${RouterPath.ADD_DISH}/${param.id}`}>
+              <h3 className="button bg-slate-600 hover:bg-slate-700">
+                메뉴 추가 &rarr;
+              </h3>
+            </Link>
             <h3 className="button">프로모션 지불하기 &rarr;</h3>
-          </Link>
-        </div>
-        {dishes && (
-          <div className="grid grid-cols-3 gap-4 mt-5">
-            {dishes.map((dish) => {
-              return <Dish key={dish.id} dish={dish} />;
-            })}
           </div>
-        )}
-        <div className="mt-5">
-          <h4 className="font-bold text-center">판매 그래프</h4>
-          <div className="max-w-lg mx-auto">
-            {/* <VictoryChart domainPadding={20}>
+          {dishes && (
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mt-5">
+              {dishes.map((dish) => {
+                return (
+                  <div
+                    key={dish.id}
+                    onClick={() => {
+                      setEditDish(dish);
+                    }}
+                  >
+                    <Dish dish={dish} />
+                  </div>
+                );
+              })}
+            </div>
+          )}
+          <div className="mt-5">
+            <h4 className="font-bold text-center">판매 그래프</h4>
+            <div className="max-w-lg mx-auto">
+              {/* <VictoryChart domainPadding={20}>
               <VictoryAxis
                 //label="Amount of Money"
                 dependentAxis
@@ -122,48 +136,50 @@ const MyRestaurant = () => {
               <VictoryAxis label="Days" />
               <VictoryBar data={chartData} />
             </VictoryChart> */}
-            <VictoryChart
-              height={500}
-              theme={VictoryTheme.material}
-              width={window.innerWidth}
-              domainPadding={50}
-              containerComponent={<VictoryVoronoiContainer />}
-            >
-              <VictoryLine
-                labels={({ datum }) => `$${datum.y}`}
-                labelComponent={
-                  <VictoryTooltip
-                    style={{ fontSize: 18 }}
-                    renderInPortal
-                    dy={-20}
-                  />
-                }
-                data={orders?.map((order) => ({
-                  x: order.createdAt,
-                  y: order.total,
-                }))}
-                interpolation="natural"
-                style={{
-                  data: {
-                    strokeWidth: 5,
-                  },
-                }}
-              />
-              <VictoryAxis
-                tickLabelComponent={<VictoryLabel renderInPortal />}
-                style={{
-                  tickLabels: {
-                    fontSize: 20,
-                  },
-                }}
-                tickFormat={(tick: any) =>
-                  new Date(tick).toLocaleDateString("ko")
-                }
-              />
-            </VictoryChart>
+              <VictoryChart
+                height={500}
+                theme={VictoryTheme.material}
+                width={window.innerWidth}
+                domainPadding={50}
+                containerComponent={<VictoryVoronoiContainer />}
+              >
+                <VictoryLine
+                  labels={({ datum }) => `$${datum.y}`}
+                  labelComponent={
+                    <VictoryTooltip
+                      style={{ fontSize: 18 }}
+                      renderInPortal
+                      dy={-20}
+                    />
+                  }
+                  data={orders?.map((order) => ({
+                    x: order.createdAt,
+                    y: order.total,
+                  }))}
+                  interpolation="natural"
+                  style={{
+                    data: {
+                      strokeWidth: 5,
+                    },
+                  }}
+                />
+                <VictoryAxis
+                  tickLabelComponent={<VictoryLabel renderInPortal />}
+                  style={{
+                    tickLabels: {
+                      fontSize: 20,
+                    },
+                  }}
+                  tickFormat={(tick: any) =>
+                    new Date(tick).toLocaleDateString("ko")
+                  }
+                />
+              </VictoryChart>
+            </div>
           </div>
         </div>
-      </div>
+      )}
+      {!!editDish && <EditDish dish={editDish} moveBack={moveBack} />}
     </div>
   );
 };

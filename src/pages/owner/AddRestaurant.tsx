@@ -11,6 +11,7 @@ import { useState } from "react";
 import { MY_RESTAURANTS_QUERY } from "./MyRestaurants";
 import { useHistory } from "react-router-dom";
 import { RouterPath } from "../../routes/routerPath";
+import { updateFile } from "../../api/upload.actions";
 
 const CREATE_RESTAURANT_MUTATION = gql`
   mutation createRestaurant($input: CreateRestaurantInputType!) {
@@ -110,12 +111,7 @@ const AddRestaurant = () => {
     try {
       setLoading(true);
 
-      const { url: coverImage } = (await (
-        await fetch("http://localhost:4000/uploads", {
-          method: "POST",
-          body: formData,
-        })
-      ).json()) as { url: string };
+      const coverImage = await updateFile(formData);
 
       setValue("coverImage", coverImage);
       createRestaurant({

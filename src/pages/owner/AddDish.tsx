@@ -9,6 +9,7 @@ import {
   CreateDishMutationVariables,
 } from "../../__generated__/graphql";
 import { useState } from "react";
+import { updateFile } from "../../api/upload.actions";
 
 const CREATE_DISH_MUTATION = gql`
   mutation createDish($input: CreateDishInput!) {
@@ -29,13 +30,14 @@ type IForm = {
   name: string;
   price: number;
   description: string;
-} & Record<string, string>;
+  file: FileList;
+} & Record<string, any>;
 
 const AddDish = () => {
   const param = useParams<{ restaurantId: string }>();
 
-  const [optionInputs, setOptionInputs] = useState<number[]>([]);
-  const [choiceInputs, setChoiceInputs] = useState<{ [key: string]: number[] }>(
+  //const [optionInputs, setOptionInputs] = useState<number[]>([]);
+  const [choiceInputs, setChoiceInputs] = useState<{ [key: string]: string[] }>(
     {}
   );
 
@@ -77,11 +79,11 @@ const AddDish = () => {
     mode: "onChange",
   });
 
-  const onSubmit = () => {
-    const { name, price, description, ...rest } = getValues();
+  const onSubmit = async () => {
+    const { name, price, description, file, ...rest } = getValues();
     console.log(rest);
 
-    const options = optionInputs.map((id) => {
+    const options = Object.keys(choiceInputs).map((id) => {
       const extra = rest[`${OPTION_EXTRA_PREFIX}${id}`];
 
       const choices = choiceInputs[`${id}`]?.map((choiceId) => {
@@ -99,17 +101,29 @@ const AddDish = () => {
       };
     });
 
-    createDish({
-      variables: {
-        input: {
-          name,
-          price: +price,
-          description,
-          restaurantId: +param.restaurantId,
-          options,
+    try {
+      let photo;
+      if (file && file.length > 0) {
+        const formData = new FormData();
+        formData.append("file", file![0]);
+        photo = await updateFile(formData);
+      }
+
+      createDish({
+        variables: {
+          input: {
+            name,
+            price: +price,
+            description,
+            restaurantId: +param.restaurantId,
+            options,
+            photo: photo,
+          },
         },
-      },
-    });
+      });
+    } catch (error) {
+      console.log("메뉴 생성 실패", error);
+    }
   };
 
   return (
@@ -147,18 +161,23 @@ const AddDish = () => {
               })}
             ></input>
             <FormError errorMessage={errors.description?.message} />
+            <input type="file" accept="image/*" {...register("file")}></input>
             <div>
               <button
                 type="button"
                 className="button"
                 onClick={() => {
-                  setOptionInputs((prev) => [Date.now(), ...prev]);
+                  const newOptionId = Date.now();
+                  setChoiceInputs((prev) => ({
+                    [`${newOptionId}`]: [],
+                    ...prev,
+                  }));
                 }}
               >
                 옵션 추가
               </button>
             </div>
-            {optionInputs.map((optionId) => (
+            {Object.keys(choiceInputs).map((optionId) => (
               <div>
                 <div key={optionId} className="flex grid-cols-4 gap-3">
                   <input
@@ -180,7 +199,7 @@ const AddDish = () => {
                     type="button"
                     className="button"
                     onClick={() => {
-                      const choiceId = Date.now();
+                      const choiceId = `${Date.now()}`;
                       setChoiceInputs((prev) => ({
                         ...prev,
                         [`${optionId}`]: [
@@ -196,9 +215,10 @@ const AddDish = () => {
                     type="button"
                     className="button bg-red-600 hover:bg-red-700"
                     onClick={() => {
-                      setOptionInputs((prev) =>
-                        prev.filter((rowId) => rowId !== optionId)
-                      );
+                      setChoiceInputs((prev) => {
+                        const { optionId, ...rest } = prev;
+                        return rest;
+                      });
                       unregister(`${OPTION_NAME_PREFIX}${optionId}`);
                       unregister(`${OPTION_EXTRA_PREFIX}${optionId}`);
                     }}

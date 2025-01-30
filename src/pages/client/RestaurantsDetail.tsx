@@ -1,6 +1,6 @@
 import { gql, useQuery } from "@apollo/client";
 import { useParams } from "react-router-dom";
-import { RESTAURANT_FRAGMENT } from "../../fragment";
+import { DISH_FRAGMENT, RESTAURANT_FRAGMENT } from "../../fragment";
 import {
   RestaurantPartsFragment,
   RestaurantQueryQuery,
@@ -14,10 +14,14 @@ const RESTARAUNT_QUERY = gql`
       error
       restaurant {
         ...RestaurantParts
+        menu {
+          ...DishParts
+        }
       }
     }
   }
   ${RESTAURANT_FRAGMENT}
+  ${DISH_FRAGMENT}
 `;
 
 type RestaurantsDetailParams = {
@@ -26,7 +30,6 @@ type RestaurantsDetailParams = {
 
 const RestaurantsDetail = () => {
   const param = useParams<RestaurantsDetailParams>();
-  console.log("🚀 ~ RestaurantsDetail ~ param:", param);
 
   const { data } = useQuery<
     RestaurantQueryQuery,
@@ -39,16 +42,16 @@ const RestaurantsDetail = () => {
     },
   });
 
-  console.log("🚀 ~ RestaurantsDetail ~ data:", data);
-
   const restaurant = data?.Restaurant.restaurant as
     | RestaurantPartsFragment
     | undefined;
 
+  console.log(restaurant);
+
   return (
     <div>
       <div
-        className="bg-red-500 bg-center bg-cover py-48"
+        className="bg-red-500 bg-center bg-cover py-24"
         style={{
           backgroundImage: `url(${restaurant?.coverImage})`,
         }}
@@ -58,6 +61,10 @@ const RestaurantsDetail = () => {
           <h5 className="text-sm font-light">{restaurant?.category?.name}</h5>
           <h6>{restaurant?.address}</h6>
         </div>
+      </div>
+      <div className="container">
+        <h4>메뉴</h4>
+        <div></div>
       </div>
     </div>
   );

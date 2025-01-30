@@ -6,9 +6,22 @@ import Logo from "./logo";
 import { LOCAL_STORAGE_TOKEN } from "../constant/constant";
 import { RouterPath } from "../routes/routerPath";
 import { isLoggedInVar } from "../apollo";
+import { UserRole } from "../__generated__/graphql";
 
 const Header = () => {
   const { data } = useMe();
+  const history = useHistory();
+
+  const userRoleName = () => {
+    const role = data?.me.role;
+    if (role === UserRole.Client) {
+      return "고객";
+    } else if (role === UserRole.Owner) {
+      return "사장님";
+    } else if (role === UserRole.Delivery) {
+      return "배달원";
+    }
+  };
 
   return (
     <>
@@ -19,7 +32,9 @@ const Header = () => {
       )}
       <header className="py-2 bg-red-300">
         <div className="w-full container flex justify-between items-center">
-          <Logo />
+          <div className="flex items-center gap-2">
+            <Logo /> {userRoleName()}
+          </div>
           <div className="flex gap-5">
             <Link to="/my-profile">
               <FontAwesomeIcon icon={faUser} />
@@ -29,6 +44,7 @@ const Header = () => {
               onClick={() => {
                 localStorage.removeItem(LOCAL_STORAGE_TOKEN);
                 isLoggedInVar(false);
+                history.push(RouterPath.HOME);
               }}
             >
               로그아웃
