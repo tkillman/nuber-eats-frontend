@@ -8,6 +8,7 @@ import {
   OrderUpdatesSubscriptionVariables,
 } from "../__generated__/graphql";
 import { FULL_ORDER_FRAGMENT } from "../fragment";
+import { useEffect } from "react";
 
 const GET_ORDERS_QUERY = gql`
   query getOrder($input: GetOrderInput!) {
@@ -32,37 +33,65 @@ const SUB_ORDER_UPDATES = gql`
 `;
 
 const OrderComponent = () => {
-  const param = useParams<{ id: string }>();
-  const { data } = useQuery<GetOrderQuery, GetOrderQueryVariables>(
-    GET_ORDERS_QUERY,
-    {
-      variables: {
-        input: {
-          orderId: +param.id,
-        },
-      },
-    }
-  );
-
-  const { data: subscriptionData } = useSubscription<
-    OrderUpdatesSubscription,
-    OrderUpdatesSubscriptionVariables
-  >(SUB_ORDER_UPDATES, {
+  const params = useParams<{ id: string }>();
+  const { data, subscribeToMore } = useQuery<
+    GetOrderQuery,
+    GetOrderQueryVariables
+  >(GET_ORDERS_QUERY, {
     variables: {
       input: {
-        id: +param.id,
+        orderId: +params.id,
       },
     },
   });
 
-  console.log(data);
-  console.log("subscriptionData", subscriptionData);
+  // const { data: subscriptionData } = useSubscription<
+  //   OrderUpdatesSubscription,
+  //   OrderUpdatesSubscriptionVariables
+  // >(SUB_ORDER_UPDATES, {
+  //   variables: {
+  //     input: {
+  //       id: +param.id,
+  //     },
+  //   },
+  // });
+
   const order = data?.getOrder?.order as
     | FullOrderPartsFragment
     | undefined
     | null;
 
   console.log(order);
+
+  useEffect(() => {
+    if (data?.getOrder.ok) {
+      subscribeToMore({
+        document: SUB_ORDER_UPDATES,
+        variables: {
+          input: {
+            id: +params.id,
+          },
+        },
+        updateQuery: (
+          prev,
+          {
+            subscriptionData: { data },
+          }: { subscriptionData: { data: OrderUpdatesSubscription } }
+        ) => {
+          if (!data) return prev;
+          const newOrder = data.orderUpdates as FullOrderPartsFragment;
+          return {
+            getOrder: {
+              ...prev.getOrder,
+              order: {
+                ...newOrder,
+              },
+            },
+          };
+        },
+      });
+    }
+  }, [data]);
 
   return (
     <div>

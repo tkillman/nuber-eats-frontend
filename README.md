@@ -28,6 +28,10 @@ owner
 timekillman@gmail.com
 111111
 
+# old subscription
+
+https://www.apollographql.com/docs/react/data/subscriptions#the-older-subscriptions-transport-ws-library
+
 # subscription
 
 https://www.apollographql.com/docs/react/data/subscriptions
