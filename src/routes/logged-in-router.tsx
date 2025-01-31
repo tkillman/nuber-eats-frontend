@@ -14,7 +14,7 @@ import MyRestaurants from "../pages/owner/MyRestaurants";
 import AddRestaurant from "../pages/owner/AddRestaurant";
 import MyRestaurant from "../pages/owner/MyRestaurant";
 import AddDish from "../pages/owner/AddDish";
-import { OrderComponent } from "../pages/Order";
+import OrderComponent from "../pages/Order";
 
 type IRouter = {
   path: string;
