@@ -27,3 +27,7 @@ test1@gmail.com
 owner
 timekillman@gmail.com
 111111
+
+# subscription
+
+https://www.apollographql.com/docs/react/data/subscriptions
