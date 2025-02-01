@@ -16,6 +16,8 @@ import Dish, {
   OnChangeItem,
 } from "../../components/Dish";
 import { useState } from "react";
+import Modal from "../../components/Modal";
+import FormButton from "../../components/FormButton";
 
 const CREATE_ORDER_MUTATION = gql`
   mutation createOrder($input: CreateOrderInput!) {
@@ -51,6 +53,8 @@ const RestaurantsDetail = () => {
   const param = useParams<RestaurantsDetailParams>();
 
   const [isOrderStarted, setIsOrderStarted] = useState(false);
+  const [isAddressModalOpen, setIsAddressModalOpen] = useState(false);
+  const [orderAddress, setOrderAddress] = useState("");
 
   const [createOrder, { data: createOrderData, loading: creaingOrder }] =
     useMutation<CreateOrderMutation, CreateOrderMutationVariables>(
@@ -68,6 +72,8 @@ const RestaurantsDetail = () => {
                 : "주문을 완료할 수 없습니다."
             );
           }
+
+          setIsAddressModalOpen(false);
         },
       }
     );
@@ -114,6 +120,30 @@ const RestaurantsDetail = () => {
     setSelectedItems((prev) => prev.filter((aItem) => aItem.dishId !== dishId));
   };
 
+  const onSubmitCreateOrder = () => {
+    const items: Array<CreateOrderItemInput> = selectedItems.map((row) => {
+      return {
+        dishId: row.dishId,
+        options: row.options?.map((option) => {
+          return {
+            name: option.name,
+            choice: option.choice,
+          };
+        }),
+      };
+    });
+
+    createOrder({
+      variables: {
+        input: {
+          restaurantId: +param.id,
+          items,
+          orderAddress: orderAddress,
+        },
+      },
+    });
+  };
+
   return (
     <div>
       <div
@@ -131,6 +161,45 @@ const RestaurantsDetail = () => {
         </div>
       </div>
       <div className="container py-24">
+        <Modal
+          isOpen={isAddressModalOpen}
+          title="주소를 입력해주세요."
+          onClose={() => {
+            setIsAddressModalOpen(false);
+          }}
+        >
+          <div>
+            <div className="flex mt-5">
+              <input
+                type="text"
+                className="input w-full"
+                placeholder="주소 입력"
+                value={orderAddress}
+                onChange={(e) => {
+                  setOrderAddress(e.target.value);
+                }}
+                onKeyDown={(e) => {
+                  if (e.key === "Enter") {
+                    onSubmitCreateOrder();
+                  }
+                }}
+              ></input>
+            </div>
+            <div>
+              <button
+                disabled={!orderAddress}
+                className={`w-full py-2 mt-4  text-white rounded-lg ${
+                  orderAddress
+                    ? "bg-gray-800"
+                    : "bg-gray-300 pointer-events-none"
+                }`}
+                onClick={onSubmitCreateOrder}
+              >
+                확인
+              </button>
+            </div>
+          </div>
+        </Modal>
         <h4>메뉴</h4>
         <div>
           {dishes && (
@@ -174,29 +243,7 @@ const RestaurantsDetail = () => {
 
                           const ok = window.confirm("주문하시겠습니까?");
                           if (ok) {
-                            console.log("items", selectedItems);
-
-                            const items: Array<CreateOrderItemInput> =
-                              selectedItems.map((row) => {
-                                return {
-                                  dishId: row.dishId,
-                                  options: row.options?.map((option) => {
-                                    return {
-                                      name: option.name,
-                                      choice: option.choice,
-                                    };
-                                  }),
-                                };
-                              });
-
-                            createOrder({
-                              variables: {
-                                input: {
-                                  restaurantId: +param.id,
-                                  items,
-                                },
-                              },
-                            });
+                            setIsAddressModalOpen(true);
                           } else {
                             setIsOrderStarted(false);
                           }
@@ -237,11 +284,8 @@ const RestaurantsDetail = () => {
                     <h4>고른 메뉴</h4>
                     {selectedItems.map((item) => {
                       return (
-                        <div>
-                          <div
-                            key={item.dishId}
-                            className="flex justify-between"
-                          >
+                        <div key={item.dishId}>
+                          <div className="flex justify-between">
                             <h4>{item?.dishName}</h4>
                             <h5>{item?.dishPrice}원</h5>
                           </div>

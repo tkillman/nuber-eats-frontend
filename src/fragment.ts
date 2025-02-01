@@ -64,6 +64,11 @@ export const FULL_ORDER_FRAGMENT = gql`
     }
     restaurant {
       name
+      lng
+      lat
     }
+    address
+    lng
+    lat
   }
 `;

@@ -100,10 +100,14 @@ const OrderComponent = () => {
         <div className="grid grid-cols-2 gap-2">
           <div>주문 레스토랑</div>
           <div>{order?.restaurant?.name}</div>
+          <div>레스토랑 주소</div>
+          <div>{order?.restaurant?.name}</div>
           <div>주문금액</div>
           <div>{order?.total}원</div>
           <div>주문상태</div>
           <div>{order?.status}</div>
+          <div>배달주소</div>
+          <div>{order?.total}원</div>
         </div>
       </div>
     </div>
