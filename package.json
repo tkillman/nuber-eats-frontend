@@ -66,6 +66,7 @@
   "devDependencies": {
     "@graphql-codegen/cli": "^5.0.3",
     "@testing-library/cypress": "^10.0.3",
+    "@types/navermaps": "^3.7.8",
     "@types/react-helmet": "^6.1.11",
     "@types/react-router-dom": "^5.3.3",
     "cypress-mochawesome-reporter": "^3.8.2"
@@ -76,5 +77,6 @@
       "./src/pages/*.tsx",
       "./src/routes/*.tsx"
     ]
-  }
+  },
+  "proxy": "https://naveropenapi.apigw.ntruss.com"
 }

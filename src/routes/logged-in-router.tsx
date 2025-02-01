@@ -15,6 +15,7 @@ import AddRestaurant from "../pages/owner/AddRestaurant";
 import MyRestaurant from "../pages/owner/MyRestaurant";
 import AddDish from "../pages/owner/AddDish";
 import OrderComponent from "../pages/Order";
+import DeliveryBoard from "../pages/delivery/DeliveryBoard";
 
 type IRouter = {
   path: string;
@@ -68,6 +69,13 @@ const ownerRouters: IRouter[] = [
   },
 ];
 
+const deliveryRouters: IRouter[] = [
+  {
+    path: RouterPath.HOME,
+    component: <DeliveryBoard />,
+  },
+];
+
 const commonRouters: IRouter[] = [
   {
     path: RouterPath.CONFIRM_EMAIL,
@@ -107,6 +115,15 @@ export const LoggedInRouter = () => {
           })}
         {data.me.role === UserRole.Owner &&
           ownerRouters.map((router) => {
+            return (
+              <Route key={router.path} path={router.path} exact={router.exact}>
+                {router.component}
+              </Route>
+            );
+          })}
+
+        {data.me.role === UserRole.Delivery &&
+          deliveryRouters.map((router) => {
             return (
               <Route key={router.path} path={router.path} exact={router.exact}>
                 {router.component}
