@@ -134,13 +134,15 @@ export const Dish: React.FC<DishProps> = ({
               <div key={index}>
                 <div className="flex justify-between items-center py-2">
                   <h6>{option.name}</h6>
-                  <button
-                    type="button"
-                    className="button"
-                    onClick={onClickCancleOption(option.name)}
-                  >
-                    선택취소
-                  </button>
+                  {isCheckMode && (
+                    <button
+                      type="button"
+                      className="button"
+                      onClick={onClickCancleOption(option.name)}
+                    >
+                      선택취소
+                    </button>
+                  )}
                 </div>
                 {option.choices?.map((choice, index) => {
                   return (

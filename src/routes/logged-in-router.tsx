@@ -73,6 +73,7 @@ const deliveryRouters: IRouter[] = [
   {
     path: RouterPath.HOME,
     component: <DeliveryBoard />,
+    exact: true,
   },
 ];
 

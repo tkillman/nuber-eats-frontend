@@ -1,4 +1,4 @@
-import { gql, useSubscription } from "@apollo/client";
+import { gql, useMutation, useSubscription } from "@apollo/client";
 
 import React, { useEffect, useRef, useState } from "react";
 import { FULL_ORDER_FRAGMENT } from "../../fragment";
@@ -6,8 +6,12 @@ import {
   CookedOrdersSubscription,
   CookedOrdersSubscriptionVariables,
   FullOrderPartsFragment,
+  TakeOrderMutation,
+  TakeOrderMutationVariables,
 } from "../../__generated__/graphql";
 import { renderToStaticMarkup } from "react-dom/server";
+import { Link, useHistory } from "react-router-dom";
+import { RouterPath } from "../../routes/routerPath";
 
 const SUB_COOKED_ORDER = gql`
   subscription cookedOrders {
@@ -18,6 +22,15 @@ const SUB_COOKED_ORDER = gql`
   ${FULL_ORDER_FRAGMENT}
 `;
 
+const TAKE_ORDER_MUTATION = gql`
+  mutation takeOrder($input: TakeOrderInput!) {
+    takeOrder(input: $input) {
+      ok
+      error
+    }
+  }
+`;
+
 const mapId = "map";
 
 const DeliveryBoard = () => {
@@ -25,6 +38,21 @@ const DeliveryBoard = () => {
     CookedOrdersSubscription,
     CookedOrdersSubscriptionVariables
   >(SUB_COOKED_ORDER);
+
+  const history = useHistory();
+
+  const cookedOrders = subscriptionData?.cookedOrders as FullOrderPartsFragment;
+
+  const [takeOrder, { data: takeOrderData }] = useMutation<
+    TakeOrderMutation,
+    TakeOrderMutationVariables
+  >(TAKE_ORDER_MUTATION, {
+    onCompleted: (data) => {
+      if (data.takeOrder.ok) {
+        history.push(`${RouterPath.ORDER}/${cookedOrders?.id}`);
+      }
+    },
+  });
 
   const [map, setMap] = useState<naver.maps.Map>();
 
@@ -233,8 +261,6 @@ const DeliveryBoard = () => {
 
   /** 주문에 대한 기사, 레스토랑, 배달위치 */
   useEffect(() => {
-    const cookedOrders =
-      subscriptionData?.cookedOrders as FullOrderPartsFragment;
     const orderId = cookedOrders?.id;
 
     if (map && cookedOrders && orderId && realTimeMyLocation) {
@@ -276,11 +302,34 @@ const DeliveryBoard = () => {
         refOrderMarkers.current = [];
       }
     };
-  }, [map, realTimeMyLocation]);
+  }, [map, cookedOrders, realTimeMyLocation]);
+
+  const onClickTakeOrder = () => {
+    takeOrder({
+      variables: {
+        input: {
+          id: cookedOrders?.id!,
+        },
+      },
+    });
+  };
 
   return (
     <div>
       <div id={mapId} style={{ width: "100%", height: "50vh" }}></div>
+      {cookedOrders?.id && (
+        <div className="container relative">
+          <div className="flex flex-col  justify-center items-center relative -top-6 bg-orange-500 p-12 gap-5">
+            <h4>주문이 들어왔습니다. 수락하시겠습니까?</h4>
+            <button
+              className="button w-full text-center"
+              onClick={onClickTakeOrder}
+            >
+              도전
+            </button>
+          </div>
+        </div>
+      )}
     </div>
   );
 };
