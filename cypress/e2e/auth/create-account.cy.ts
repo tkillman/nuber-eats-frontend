@@ -24,7 +24,7 @@ describe("회원가입 페이지", () => {
     const emailValue = "test@gmail.com";
     const passwordValue = "111111";
 
-    cy.intercept("POST", "http://localhost:4000/graphql", (req) => {
+    cy.intercept("POST", `http://localhost:4000/graphql`, (req) => {
       if (req.body?.operationName === "createUser") {
         req.reply((res) => {
           res.send({

@@ -12,7 +12,7 @@
 /build
 
 # apollo
-/src/__generated__
+#/src/__generated__
 
 # misc
 .DS_Store

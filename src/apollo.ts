@@ -18,7 +18,7 @@ export const isLoggedInVar = makeVar(Boolean(token));
 export const authTokenVar = makeVar(token);
 
 const wsLink = new WebSocketLink(
-  new SubscriptionClient("ws://localhost:4000/graphql", {
+  new SubscriptionClient(`${process.env.REACT_APP_SOCKET_DOMAIN}/graphql`, {
     connectionParams: {
       "x-jwt": authTokenVar() || "",
     },
@@ -26,7 +26,7 @@ const wsLink = new WebSocketLink(
 );
 
 const httpLink = createHttpLink({
-  uri: "http://localhost:4000/graphql",
+  uri: `${process.env.REACT_APP_API_DOMAIN}/graphql`,
 });
 
 const authLink = setContext((_, { headers }) => {

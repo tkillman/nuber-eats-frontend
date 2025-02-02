@@ -225,7 +225,7 @@ const DeliveryBoard = () => {
     // https://naveropenapi.apigw.ntruss.com
     // const baseUrl =
     //   "https://naveropenapi.apigw.ntruss.com/map-direction/v1/driving";
-    const baseUrl = "http://localhost:4000/map-direction/v1/driving";
+    const baseUrl = `${process.env.REACT_APP_API_DOMAIN}/map-direction/v1/driving`;
 
     const reqParams = {
       start: `${params.origin.lng()},${params.origin.lat()}`,
