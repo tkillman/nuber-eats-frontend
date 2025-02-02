@@ -85,7 +85,8 @@
     "tailwind:build": "tailwindcss build src/styles/tailwind.css -o src/styles/styles.css",
     "generate": "rimraf src/__generated__ && graphql-codegen",
     "start": "env-cmd -f .env.development yarn run generate & yarn run tailwind:build & node scripts/start.js",
-    "build": "env-cmd -f .env.production node scripts/build.js",
+    "build": "env-cmd -f .env.production CI=false node scripts/build.js",
+    "build:window": "env-cmd -f .env.production node scripts/build.js",
     "test": "node scripts/test.js --verbose",
     "test:cover": "yarn test --coverage --watchAll=false"
   },
