@@ -42,7 +42,7 @@ const Header = () => {
             <span
               className="cursor-pointer"
               onClick={() => {
-                localStorage.removeItem(LOCAL_STORAGE_TOKEN);
+                sessionStorage.removeItem(LOCAL_STORAGE_TOKEN);
                 isLoggedInVar(false);
                 history.push(RouterPath.HOME);
               }}

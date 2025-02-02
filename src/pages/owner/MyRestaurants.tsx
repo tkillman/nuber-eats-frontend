@@ -1,12 +1,22 @@
-import { gql, useQuery } from "@apollo/client";
-import { RESTAURANT_FRAGMENT } from "../../fragment";
+import { gql, useQuery, useSubscription } from "@apollo/client";
+import { FULL_ORDER_FRAGMENT, RESTAURANT_FRAGMENT } from "../../fragment";
 import {
   MyRestaurantsQuery,
   RestaurantPartsFragment,
 } from "../../__generated__/graphql";
-import { Link } from "react-router-dom";
+import { Link, useHistory } from "react-router-dom";
 import { RouterPath } from "../../routes/routerPath";
 import RestaurantComponent from "../../components/Restaurant";
+import { useEffect } from "react";
+
+const SUB_PENDING_ORDERS = gql`
+  subscription pendingOrders {
+    pendingOrders {
+      ...FullOrderParts
+    }
+  }
+  ${FULL_ORDER_FRAGMENT}
+`;
 
 export const MY_RESTAURANTS_QUERY = gql`
   query myRestaurants {
@@ -27,6 +37,16 @@ const MyRestaurants = () => {
 
   const isExist = data?.myRestaurants.restaurants?.length !== 0;
   const results = data?.myRestaurants.restaurants;
+
+  const { data: subscriptionData } = useSubscription(SUB_PENDING_ORDERS);
+
+  const history = useHistory();
+
+  useEffect(() => {
+    if (subscriptionData?.pendingOrders.id) {
+      history.push(`${RouterPath.ORDER}/${subscriptionData.pendingOrders.id}`);
+    }
+  }, [subscriptionData]);
 
   return (
     <div>

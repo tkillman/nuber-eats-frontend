@@ -45,7 +45,7 @@ const Login = () => {
         login: { ok, error, token },
       } = data;
       if (ok) {
-        localStorage.setItem(LOCAL_STORAGE_TOKEN, token || "");
+        sessionStorage.setItem(LOCAL_STORAGE_TOKEN, token || "");
         authTokenVar(token);
         isLoggedInVar(Boolean(token));
       }

@@ -1,5 +1,5 @@
 import { gql, useMutation, useQuery } from "@apollo/client";
-import { useParams } from "react-router-dom";
+import { useHistory, useParams } from "react-router-dom";
 import { DISH_FRAGMENT, RESTAURANT_FRAGMENT } from "../../fragment";
 import {
   CreateOrderInput,
@@ -18,12 +18,16 @@ import Dish, {
 import { useState } from "react";
 import Modal from "../../components/Modal";
 import FormButton from "../../components/FormButton";
+import { RouterPath } from "../../routes/routerPath";
 
 const CREATE_ORDER_MUTATION = gql`
   mutation createOrder($input: CreateOrderInput!) {
     createOrder(input: $input) {
       ok
       error
+      order {
+        id
+      }
     }
   }
 `;
@@ -56,6 +60,8 @@ const RestaurantsDetail = () => {
   const [isAddressModalOpen, setIsAddressModalOpen] = useState(false);
   const [orderAddress, setOrderAddress] = useState("");
 
+  const history = useHistory();
+
   const [createOrder, { data: createOrderData, loading: creaingOrder }] =
     useMutation<CreateOrderMutation, CreateOrderMutationVariables>(
       CREATE_ORDER_MUTATION,
@@ -65,6 +71,7 @@ const RestaurantsDetail = () => {
             alert("주문이 완료되었습니다.");
             setIsOrderStarted(false);
             setSelectedItems([]);
+            history.push(`${RouterPath.ORDER}/${data.createOrder.order?.id}`);
           } else {
             alert(
               data.createOrder.error

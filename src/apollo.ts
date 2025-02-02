@@ -2,8 +2,6 @@
 import {
   ApolloClient,
   InMemoryCache,
-  ApolloProvider,
-  gql,
   makeVar,
   createHttpLink,
   split,
@@ -14,7 +12,7 @@ import { SubscriptionClient } from "subscriptions-transport-ws";
 import { WebSocketLink } from "@apollo/client/link/ws";
 import { getMainDefinition } from "@apollo/client/utilities";
 
-const token = localStorage.getItem(LOCAL_STORAGE_TOKEN);
+const token = sessionStorage.getItem(LOCAL_STORAGE_TOKEN);
 
 export const isLoggedInVar = makeVar(Boolean(token));
 export const authTokenVar = makeVar(token);
