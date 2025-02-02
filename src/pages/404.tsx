@@ -6,7 +6,7 @@ const NotFound = () => {
   const history = useHistory();
 
   return (
-    <div className="flex flex-col items-center justify-center">
+    <div className="mt-52 flex flex-col items-center justify-center">
       <Helmet>
         <title>Page Not Found</title>
       </Helmet>

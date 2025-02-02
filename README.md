@@ -41,3 +41,7 @@ https://www.apollographql.com/docs/react/data/subscriptions
 https://navermaps.github.io/maps.js.ncp/docs/tutorial-polyline-route.example.html
 
 app.netlify.com
+
+# 배포 도메인
+
+tranquil-syrniki-326a0a.netlify.app

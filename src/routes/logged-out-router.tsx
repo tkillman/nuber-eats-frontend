@@ -1,5 +1,5 @@
 import { isLoggedInVar } from "../apollo";
-import { BrowserRouter, Route, Switch } from "react-router-dom";
+import { BrowserRouter, Redirect, Route, Switch } from "react-router-dom";
 import Login from "../pages/login";
 import CreateAccount from "../pages/create-account";
 import NotFound from "../pages/404";
@@ -13,15 +13,16 @@ export const LoggedOutRouter = () => {
           <Route path="/create-account" exact>
             <CreateAccount />
           </Route>
-          <Route path="/" exact>
+          <Route path="/login" exact>
             <Login />
           </Route>
           <Route path="/confirm-email">
             <ConfirmEmail />
           </Route>
-          <Route>
+          <Redirect to="/login" />
+          {/* <Route>
             <NotFound />
-          </Route>
+          </Route> */}
         </Switch>
       </BrowserRouter>
     </>

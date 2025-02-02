@@ -272,7 +272,7 @@ const RestaurantsDetail = () => {
                   )}
                 </div>
                 {selectedItems.length > 0 && (
-                  <div className="mt-5">
+                  <div className="mt-5 hidden md:block">
                     <div className="flex justify-between">
                       <h4>총액</h4>
                       <h4>
