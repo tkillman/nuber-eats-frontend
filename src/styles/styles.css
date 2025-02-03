@@ -1240,6 +1240,10 @@ video {
     position: static;
   }
 
+  .md\:block {
+    display: block;
+  }
+
   .md\:w-3\/12 {
     width: 25%;
   }

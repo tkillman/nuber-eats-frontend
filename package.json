@@ -88,7 +88,8 @@
     "start": "env-cmd -f .env.development yarn run generate & yarn run tailwind:build & node scripts/start.js",
     "build": "env-cmd -f .env.production cross-env CI=false node scripts/build.js",
     "test": "node scripts/test.js --verbose",
-    "test:cover": "yarn test --coverage --watchAll=false"
+    "test:cover": "yarn test --coverage --watchAll=false",
+    "cy:open": "yarn cypress open"
   },
   "eslintConfig": {
     "extends": [
