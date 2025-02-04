@@ -89,7 +89,9 @@
     "build": "env-cmd -f .env.production cross-env CI=false node scripts/build.js",
     "test": "node scripts/test.js --verbose",
     "test:cover": "yarn test --coverage --watchAll=false",
-    "cy:open": "yarn cypress open"
+    "cy:open": "cypress open",
+    "cy:run": "cypress run",
+    "cy:report": "start-server-and-test start http://localhost:3000 'cypress run'"
   },
   "eslintConfig": {
     "extends": [
@@ -115,7 +117,8 @@
     "@types/navermaps": "^3.7.8",
     "@types/react-helmet": "^6.1.11",
     "@types/react-router-dom": "^5.3.3",
-    "cypress-mochawesome-reporter": "^3.8.2"
+    "cypress-mochawesome-reporter": "^3.8.2",
+    "start-server-and-test": "^2.0.10"
   },
   "jest": {
     "roots": [

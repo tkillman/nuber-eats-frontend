@@ -5,9 +5,9 @@ export default defineConfig({
     baseUrl: "http://localhost:3000",
     reporter: "cypress-mochawesome-reporter",
     video: true,
-    reporterOptions: {
-      videoOnFailOnly: true,
-    },
+    // reporterOptions: {
+    //   videoOnFailOnly: true,
+    // },
     experimentalRunAllSpecs: true,
     setupNodeEvents(on, config) {
       // implement node event listeners here
