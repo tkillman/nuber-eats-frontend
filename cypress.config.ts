@@ -8,6 +8,7 @@ export default defineConfig({
     reporterOptions: {
       videoOnFailOnly: true,
     },
+    experimentalRunAllSpecs: true,
     setupNodeEvents(on, config) {
       // implement node event listeners here
       require("cypress-mochawesome-reporter/plugin")(on);
