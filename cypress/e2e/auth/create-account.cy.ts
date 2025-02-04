@@ -32,7 +32,7 @@ describe("회원가입 페이지", () => {
           });
         });
       }
-    });
+    }).as("createAccountApi");
 
     cy.visit("/create-account");
     cy.get('input[name="email"]').type(emailValue);
@@ -40,7 +40,7 @@ describe("회원가입 페이지", () => {
     cy.get('select[name="role"]').select("Owner");
     cy.get("button").should("not.have.class", "pointer-events-none").click();
 
-    cy.wait(1000);
+    cy.wait("@createAccountApi");
 
     cy.clientLogin({ email: emailValue, password: passwordValue });
   });

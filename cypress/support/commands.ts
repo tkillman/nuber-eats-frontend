@@ -50,11 +50,11 @@ declare global {
 }
 
 Cypress.Commands.add("assetsLogout", () => {
-  cy.window().its("localStorage.token").should("be.undefined");
+  cy.window().its("sessionStorage.token").should("be.undefined");
 });
 
 Cypress.Commands.add("assetsLogin", () => {
-  cy.window().its("localStorage.token").should("be.a", "string");
+  cy.window().its("sessionStorage.token").should("be.a", "string");
 });
 
 Cypress.Commands.add(
@@ -70,6 +70,7 @@ Cypress.Commands.add(
   }) => {
     cy.intercept("POST", "http://localhost:4000/graphql", (req) => {
       if (req.body?.operationName === "loginMutation") {
+        req.alias = "loginMutationRequest";
         req.reply((res) => {
           res.send({
             data: {
@@ -100,13 +101,30 @@ Cypress.Commands.add(
       }
     });
 
+    // 토큰이 없는 상태 확인
     cy.assetsLogout();
-    //cy.visit("/");
+
+    // 홈페이지 url 이동
+    cy.visit("/");
     // 여기서는 로그인 페이지로 이동했음
-    cy.location("pathname").should("eq", "/");
+    cy.location("pathname").should("eq", "/login");
+
+    // 이메일, 패스워드 입력
     cy.get('input[name="email"]').type(email);
     cy.get('input[name="password"]').type(password);
+
+    // 로그인 버튼 활성화 확인
     cy.get("button").should("not.have.class", "pointer-events-none").click();
+
+    cy.wait("@loginMutationRequest")
+      .its("request")
+      .then((req) => {
+        cy.wrap(req).its("body.variables.loginInput.email").should("eq", email);
+        cy.wrap(req)
+          .its("body.variables.loginInput.password")
+          .should("eq", password);
+      });
+
     cy.assetsLogin();
   }
 );
